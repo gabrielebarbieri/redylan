@@ -143,5 +143,5 @@ for (var i = 0; i < 10; i++) {
 }
 
 export default function helloMarkov () {
-  return 'Hello Markov'
+  return generate(mc, 2)
 }
