@@ -21,13 +21,19 @@
 </template>
 
 <script>
-import helloMarkov from '@/markovchain'
+import markov from '@/markovchain'
+
+var c = [['C'], null, null, ['D']]
+var corpus = ['ECDECC'.split(''), 'CCEEDC'.split('')]
+var n = 2
+var ms = markov.parseSequences(corpus, n)
+var mc = markov.getMarkovProcess(ms, c)
 
 export default {
   name: 'hello',
   data () {
     return {
-      msg: helloMarkov()
+      msg: markov.generate(mc, 2)
     }
   }
 }

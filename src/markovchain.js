@@ -131,17 +131,9 @@ function generate (markovProcess, order) {
   return sequence
 }
 
-var c = [['C'], null, null, ['D']]
-var corpus = ['ECDECC'.split(''), 'CCEEDC'.split('')]
-var n = 2
-var ms = parseSequences(corpus, n)
-console.log(ms)
-var mc = getMarkovProcess(ms, c)
-console.log(mc)
-for (var i = 0; i < 10; i++) {
-  console.log(generate(mc, 2))
+var markov = {
+  parseSequences: parseSequences,
+  getMarkovProcess: getMarkovProcess,
+  generate: generate
 }
-
-export default function helloMarkov () {
-  return generate(mc, 2)
-}
+module.exports = markov
