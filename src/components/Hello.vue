@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import markov from '@/markovchain'
+import markov from '@/core/markovchain'
 
 var c = [['C'], null, null, ['D']]
 var corpus = ['ECDECC'.split(''), 'CCEEDC'.split('')]
