@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <h1>{{sentence}}</h1>
     <!-- <h2>Essential Links</h2>
     <ul>
       <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
@@ -22,18 +23,22 @@
 
 <script>
 import markov from '@/core/markovchain'
+import dylan from '@/core/dylan.json'
 
 var c = [['C'], null, null, ['D']]
-var corpus = ['ECDECC'.split(''), 'CCEEDC'.split('')]
+var corpus = dylan['sentences'] // ['ECDECC'.split(''), 'CCEEDC'.split('')]
 var n = 2
 var ms = markov.parseSequences(corpus, n)
+console.log(ms)
+
 var mc = markov.getMarkovProcess(ms, c)
 
 export default {
   name: 'hello',
   data () {
     return {
-      msg: markov.generate(mc, 2)
+      msg: markov.generate(mc, 2),
+      sentence: dylan['sentences']
     }
   }
 }

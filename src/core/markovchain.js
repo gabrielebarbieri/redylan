@@ -18,11 +18,13 @@ function normalize (matrix, alphas) {
   )
 }
 
-function getTransitionMatrix (sequence, order = 1) {
+function getTransitionMatrix (seq, order = 1) {
   var m = {}
+  var sequence = _.map(seq, w => _.replace(w, /\./g, '*'))
+
   for (var index = order; index < sequence.length; index++) {
-    var prefix = sequence.slice(index - order, index)
-    var suffix = sequence[index]
+    var prefix = JSON.stringify(sequence.slice(index - order, index))
+    var suffix = JSON.stringify(sequence[index])
     var path = prefix + '.' + suffix
     _.update(m, path, n => (n ? n + 1 : 1))
   }
@@ -136,4 +138,18 @@ var markov = {
   getMarkovProcess: getMarkovProcess,
   generate: generate
 }
+
 module.exports = markov
+
+/*************************************************************************************/
+// var corpus = [ [ '<s>',
+//   'length',
+//   'leather',
+//   'coat',
+//   '</s>' ] ]
+// console.log(corpus)
+
+// var n = 0
+// var ms = markov.parseSequences(corpus, n)
+// console.log(ms[0])
+/*************************************************************************************/
