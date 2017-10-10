@@ -2,7 +2,7 @@ var _ = require('lodash')
 var PD = require('probability-distributions')
 
 function computeAlphas (matrix) {
-  return _.mapValues(matrix, probabilities => _.reduce(probabilities, _.add))
+  return _.mapValues(matrix, probabilities => _.sum(_.values(probabilities)))
 }
 
 function normalizeValues (values, alpha) {
@@ -18,15 +18,26 @@ function normalize (matrix, alphas) {
   )
 }
 
-function getTransitionMatrix (seq, order = 1) {
-  var m = {}
-  var sequence = _.map(seq, w => _.replace(w, /\./g, '*'))
+function update (matrix, prefix, suffix) {
+  if (matrix[prefix] === undefined) {
+    matrix[prefix] = {}
+  }
 
+  if (matrix[prefix][suffix] === undefined) {
+    matrix[prefix][suffix] = 0
+  }
+  matrix[prefix][suffix] += 1
+}
+
+function getTransitionMatrix (sequence, order = 1) {
+  var m = {}
+  // var sequence = _.map(seq, w => _.replace(w, /\./g, '*'))
   for (var index = order; index < sequence.length; index++) {
-    var prefix = JSON.stringify(sequence.slice(index - order, index))
-    var suffix = JSON.stringify(sequence[index])
+    var prefix = sequence.slice(index - order, index)
+    var suffix = sequence[index]
     var path = prefix + '.' + suffix
-    _.update(m, path, n => (n ? n + 1 : 1))
+    // _.update(m, path, n => (n ? n + 1 : 1))
+    update(m, prefix, suffix)
   }
   return m
 }
@@ -141,15 +152,14 @@ var markov = {
 
 module.exports = markov
 
-/*************************************************************************************/
 // var corpus = [ [ '<s>',
-//   'length',
-//   'leather',
-//   'coat',
-//   '</s>' ] ]
-// console.log(corpus)
+// '26',
+// 'like',
+// 'mine.',
+// '</s>' ] ]
+// // console.log(corpus)
 
-// var n = 0
+// var n = 2
 // var ms = markov.parseSequences(corpus, n)
 // console.log(ms[0])
-/*************************************************************************************/
+// console.log(ms[1])
