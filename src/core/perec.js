@@ -7,7 +7,7 @@ var ORDER = dylanMatrices.length - 1
 
 function generateSentences (constraints, n) {
   var mc = markov.getMarkovProcess(dylanMatrices, constraints)
-  return _.times(n, i => markov.generate(mc, ORDER))
+  return _.times(n, i => _.join(markov.generate(mc, ORDER), ' '))
 }
 
 function getConstraints (words, index, length) {
@@ -31,5 +31,7 @@ function generateSemanticSentence (sense, length, n) {
   }
 }
 
-console.log(generateSemanticSentence('music', 10, 3))
+console.log(generateSemanticSentence('music', 10, 1))
+console.log(generateSemanticSentence('rebellion', 10, 1))
+console.log(generateSemanticSentence('america', 10, 1))
 
