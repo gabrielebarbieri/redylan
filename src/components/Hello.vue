@@ -51,7 +51,7 @@
         vm.sentence = 'Computing ... '
         worker.post('music').then(function (e) {
           console.log('Worker said: ', e)
-          vm.sentence = e
+          vm.sentence = e[0]
         })
       }
     }
