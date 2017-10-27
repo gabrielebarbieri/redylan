@@ -24,7 +24,20 @@
 </template>
 
 <script>
-  var Worker = require('worker-loader!@/core/worker')
+  var Worker = require('worker-loader!@/core/perec')
+  var worker = new Worker()
+  worker.post = message =>
+    new Promise((resolve, reject) => {
+      worker.onmessage = event => {
+        resolve(event.data)
+      }
+      worker.onerror = e => {
+        console.error(`Error: Line ${e.lineno} in ${e.filename}: ${e.message}`)
+        reject(e)
+      }
+      worker.postMessage(message)
+    })
+
   export default {
     name: 'hello',
     data () {
@@ -36,13 +49,10 @@
       test: function () {
         var vm = this
         vm.sentence = 'Computing ... '
-        var worker = new Worker()
-
-        worker.addEventListener('message', function (e) {
-          console.log('Worker said: ', e.data)
-          vm.sentence = e.data
-        }, false)
-        worker.postMessage('music')
+        worker.post('music').then(function (e) {
+          console.log('Worker said: ', e)
+          vm.sentence = e
+        })
       }
     }
   }
