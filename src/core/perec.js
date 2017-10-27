@@ -20,6 +20,7 @@ function getConstraints (words, index, length) {
 
 function generateSemanticSentence (sense, length, n) {
   var words = similarities[sense]
+
   var indices = _.shuffle(_.range(length))
   for (var i = 0; i < length; i++) {
     var index = indices[i]
@@ -29,9 +30,7 @@ function generateSemanticSentence (sense, length, n) {
     } catch (err) {
     }
   }
+  return null
 }
 
-console.log(generateSemanticSentence('music', 10, 1))
-console.log(generateSemanticSentence('rebellion', 10, 1))
-console.log(generateSemanticSentence('america', 10, 1))
-
+module.exports = generateSemanticSentence

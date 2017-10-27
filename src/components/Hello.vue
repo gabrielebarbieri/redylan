@@ -1,7 +1,9 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
     <h1>{{sentence}}</h1>
+    <div id="example-2">
+      <button v-on:click="test">Generate</button>
+    </div>
     <!-- <h2>Essential Links</h2>
     <ul>
       <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
@@ -22,45 +24,50 @@
 </template>
 
 <script>
-import markov from '@/core/markovchain'
-import dylan from '@/core/dylan.json'
+  var Worker = require('worker-loader!@/core/worker')
+  export default {
+    name: 'hello',
+    data () {
+      return {
+        sentence: 'Hello World'
+      }
+    },
+    methods: {
+      test: function () {
+        var vm = this
+        vm.sentence = 'Computing ... '
+        var worker = new Worker()
 
-var c = [['C'], null, null, ['D']]
-var corpus = dylan['sentences'] // ['ECDECC'.split(''), 'CCEEDC'.split('')]
-var n = 2
-var ms = markov.parseSequences(corpus, n)
-console.log(ms)
-
-var mc = markov.getMarkovProcess(ms, c)
-
-export default {
-  name: 'hello',
-  data () {
-    return {
-      msg: markov.generate(mc, 2),
-      sentence: dylan['sentences']
+        worker.addEventListener('message', function (e) {
+          console.log('Worker said: ', e.data)
+          vm.sentence = e.data
+        }, false)
+        worker.postMessage('music')
+      }
     }
   }
-}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
+  h1,
+  h2 {
+    font-weight: normal;
+  }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
 
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
+  li {
+    display: inline-block;
+    margin: 0 10px;
+  }
 
-a {
-  color: #42b983;
-}
+  a {
+    color: #42b983;
+  }
+
 </style>

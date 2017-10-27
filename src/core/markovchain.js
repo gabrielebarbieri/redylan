@@ -35,8 +35,6 @@ function getTransitionMatrix (sequence, order = 1) {
   for (var index = order; index < sequence.length; index++) {
     var prefix = sequence.slice(index - order, index)
     var suffix = sequence[index]
-    var path = prefix + '.' + suffix
-    // _.update(m, path, n => (n ? n + 1 : 1))
     update(m, prefix, suffix)
   }
   return m
@@ -80,12 +78,13 @@ function filterValues (matrix, values) {
 }
 
 function selectAlpha (suffix, prefix, alphas) {
-  var index = _.tail(_.split(prefix, ','))
+  var split = _.split(prefix, ',')
+  var index = _.tail(split)
   index.push(suffix)
 
   if (!(index in alphas)) {
     // Maybe is back-propagating to a smaller order, try to use the whole prefix as index
-    index = _.split(prefix, ',')
+    index = split
     index.push(suffix)
   }
 
@@ -151,15 +150,3 @@ var markov = {
 }
 
 module.exports = markov
-
-// var corpus = [ [ '<s>',
-// '26',
-// 'like',
-// 'mine.',
-// '</s>' ] ]
-// // console.log(corpus)
-
-// var n = 2
-// var ms = markov.parseSequences(corpus, n)
-// console.log(ms[0])
-// console.log(ms[1])
