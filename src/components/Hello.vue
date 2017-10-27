@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  var Worker = require('worker-loader!@/core/perec')
+  var Worker = require('worker-loader!@/core/worker')
   var worker = new Worker()
   worker.post = message =>
     new Promise((resolve, reject) => {

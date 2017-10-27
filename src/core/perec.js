@@ -33,8 +33,4 @@ function generateSemanticSentence (sense, length, n) {
   return null
 }
 
-self.onmessage = function (event) {
-  console.log(event)
-
-  self.postMessage(generateSemanticSentence(event.data, 10, 1))
-}
+module.exports = generateSemanticSentence
