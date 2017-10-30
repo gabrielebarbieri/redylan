@@ -1,25 +1,9 @@
 <template>
-  <div class="hello">
+  <div>
     <h1>{{sentence}}</h1>
-    <div id="example-2">
-      <button v-on:click="test">Generate</button>
+    <div>
+      <button :class="buttonClass" v-on:click="test">Generate</button>
     </div>
-    <!-- <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-      <br>
-      <li><a href="http://vuejs-templates.github.io/webpack/" target="_blank">Docs for This Template</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul> -->
   </div>
 </template>
 
@@ -42,16 +26,21 @@
     name: 'hello',
     data () {
       return {
-        sentence: 'Hello World'
+        sentence: 'Hello World',
+        buttonClass: 'ui button'
       }
     },
     methods: {
       test: function () {
+        console.log('here')
+
         var vm = this
         vm.sentence = 'Computing ... '
+        vm.buttonClass = 'ui button loading'
         worker.post('music').then(function (e) {
           console.log('Worker said: ', e)
           vm.sentence = e[0]
+          vm.buttonClass = 'ui button'
         })
       }
     }
@@ -59,7 +48,7 @@
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!--
 <style scoped>
   h1,
   h2 {
@@ -81,3 +70,4 @@
   }
 
 </style>
+Add "scoped" attribute to limit CSS to this component only -->
