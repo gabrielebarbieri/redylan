@@ -8,7 +8,7 @@ class App extends Component {
     return (
       <div className="App">
         <Logo />
-        <Sentence className="App-intro" sense="music" />
+        <SentenceGenerator />
         <Doc />
       </div>
     );
@@ -23,23 +23,6 @@ function Logo(props) {
   );
 }
 
-class Sentence extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { sentence: "Hello World" };
-  }
-
-  componentDidMount() {
-    this.setState({
-      sentence: "generate(this.props.sense, 10, 1)"
-    });
-  }
-
-  render() {
-    return <p>{this.state.sentence}</p>;
-  }
-}
-
 function Doc() {
   return (
     <p>
@@ -47,6 +30,35 @@ function Doc() {
       <a href="https://reactjs.org/docs/handling-events.html">here</a>
     </p>
   );
+}
+
+class SentenceGenerator extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { sentence: "hello world", sense: "music" };
+    this.handleGeneration = this.handleGeneration.bind(this);
+  }
+
+  handleGeneration() {
+    this.setState({ sentence: generate(this.state.sense, 10, 1) });
+  }
+
+  render() {
+    return (
+      <div>
+        <Sentence className="App-intro" sentence={this.state.sentence} />
+        <GenerateButton onGenerateClick={this.handleGeneration} />
+      </div>
+    );
+  }
+}
+
+function Sentence(props) {
+  return <p>{props.sentence}</p>;
+}
+
+function GenerateButton(props) {
+  return <button onClick={props.onGenerateClick}>Generate</button>;
 }
 
 export default App;
