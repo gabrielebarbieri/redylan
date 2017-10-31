@@ -2,7 +2,10 @@
   <div>
     <h1>{{sentence}}</h1>
     <div>
-      <button :class="buttonClass" v-on:click="test">Generate</button>
+      <div class="ui input">
+        <input type="text" v-model="sense" placeholder="Semantic sense">
+      </div>
+      <button class="ui button" :class="{loading: isLoading}" v-on:click="test">Generate</button>
     </div>
   </div>
 </template>
@@ -27,20 +30,21 @@
     data () {
       return {
         sentence: 'Hello World',
-        buttonClass: 'ui button'
+        isLoading: false,
+        sense: ''
       }
     },
     methods: {
       test: function () {
-        console.log('here')
+        console.log(this.sense)
 
         var vm = this
         vm.sentence = 'Computing ... '
-        vm.buttonClass = 'ui button loading'
-        worker.post('music').then(function (e) {
+        vm.isLoading = true
+        worker.post(vm.sense).then(function (e) {
           console.log('Worker said: ', e)
           vm.sentence = e[0]
-          vm.buttonClass = 'ui button'
+          vm.isLoading = false
         })
       }
     }
