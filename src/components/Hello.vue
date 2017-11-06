@@ -7,10 +7,12 @@
       </div>
       <button class="ui button" :class="{loading: isLoading}" v-on:click="test">Generate</button>
     </div>
+    <graph :values="[99, 71, 78, 25, 92, 92]"></graph>
   </div>
 </template>
 
 <script>
+  import Graph from '@/components/Graph'
   var perec = require('@/core/perec')
   var Worker = require('worker-loader!@/core/worker')
   var worker = new Worker()
@@ -48,10 +50,26 @@
           vm.isLoading = false
         })
       }
+    },
+    components: {
+      'graph': Graph
     }
   }
-
 </script>
+
+
+<<style>
+.chart rect {
+  fill: steelblue;
+}
+
+.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
+
+</style>
 
 <!--
 <style scoped>
