@@ -20,14 +20,21 @@ export default {
   mounted () {
     this.calculatePath()
   },
+  watch: {
+    values: function dataChanged (newData, oldData) {
+      console.log(newData)
+
+      this.calculatePath()
+    }
+  },
   methods: {
     getScales () {
       const x = d3.scaleTime().range([0, 430])
       const y = d3.scaleLinear().range([210, 0])
       d3.axisLeft().scale(x)
       d3.axisBottom().scale(y)
-      x.domain(d3.extent(this.data, (d, i) => i))
-      y.domain([0, d3.max(this.data, d => d)])
+      x.domain(d3.extent(this.values, (d, i) => i))
+      y.domain([0, d3.max(this.values, d => d)])
       return { x, y }
     },
     calculatePath () {
@@ -35,7 +42,7 @@ export default {
       const path = d3.line()
         .x((d, i) => scale.x(i))
         .y(d => scale.y(d))
-      this.line = path(this.data)
+      this.line = path(this.values)
     }
   }
 }

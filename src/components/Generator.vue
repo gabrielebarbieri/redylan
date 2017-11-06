@@ -7,12 +7,13 @@
       </div>
       <button class="ui button" :class="{loading: isLoading}" v-on:click="generate">Generate</button>
     </div>
-    <graph :values="[99, 71, 78, 25, 92, 92]"></graph>
+    <graph :values="values"></graph>
   </div>
 </template>
 
 <script>
   import Graph from '@/components/Graph'
+  var _ = require('lodash')
   var perec = require('@/core/perec')
   var Worker = require('worker-loader!@/core/worker')
   var worker = new Worker()
@@ -34,7 +35,8 @@
       return {
         sentence: 'Hello World',
         isLoading: false,
-        sense: 'music'
+        sense: 'music',
+        values: [99, 71, 78, 25, 92, 92]
       }
     },
     methods: {
@@ -46,7 +48,7 @@
         vm.isLoading = true
         worker.post(vm.sense).then(function (markovProcess) {
           vm.sentence = perec.generate(markovProcess)
-          console.log(markovProcess)
+          vm.values = _.map(markovProcess, e => _.size(e))
           vm.isLoading = false
         })
       }
