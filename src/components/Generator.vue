@@ -5,7 +5,7 @@
       <div class="ui input">
         <input type="text" v-model="sense" placeholder="Semantic sense">
       </div>
-      <button class="ui button" :class="{loading: isLoading}" v-on:click="test">Generate</button>
+      <button class="ui button" :class="{loading: isLoading}" v-on:click="generate">Generate</button>
     </div>
     <graph :values="[99, 71, 78, 25, 92, 92]"></graph>
   </div>
@@ -29,7 +29,7 @@
     })
 
   export default {
-    name: 'hello',
+    name: 'generator',
     data () {
       return {
         sentence: 'Hello World',
@@ -38,7 +38,7 @@
       }
     },
     methods: {
-      test: function () {
+      generate: function () {
         console.log(this.sense)
 
         var vm = this
@@ -56,41 +56,3 @@
     }
   }
 </script>
-
-
-<<style>
-.chart rect {
-  fill: steelblue;
-}
-
-.chart text {
-  fill: white;
-  font: 10px sans-serif;
-  text-anchor: end;
-}
-
-</style>
-
-<!--
-<style scoped>
-  h1,
-  h2 {
-    font-weight: normal;
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-
-  a {
-    color: #42b983;
-  }
-
-</style>
-Add "scoped" attribute to limit CSS to this component only -->
