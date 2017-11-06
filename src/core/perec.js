@@ -5,9 +5,8 @@ var _ = require('lodash')
 
 var ORDER = dylanMatrices.length - 1
 
-function generateSentences (constraints, n) {
-  var mc = markov.getMarkovProcess(dylanMatrices, constraints)
-  return _.times(n, i => _.join(_.slice(markov.generate(mc, ORDER), 1, -1), ' '))
+function generateSentence (markovProcess) {
+  return _.join(_.slice(markov.generate(markovProcess, ORDER), 1, -1), ' ')
 }
 
 function getConstraints (words, index, length) {
@@ -18,7 +17,7 @@ function getConstraints (words, index, length) {
   return cts
 }
 
-function generateSemanticSentence (sense, length, n) {
+function getSemanticMarkovProcess (sense, length) {
   var words = similarities[sense]
 
   var indices = _.shuffle(_.range(length))
@@ -26,11 +25,22 @@ function generateSemanticSentence (sense, length, n) {
     var index = indices[i]
     var cts = getConstraints(words, index, length)
     try {
-      return generateSentences(cts, n)
+      return markov.getMarkovProcess(dylanMatrices, cts)
     } catch (err) {
     }
   }
   return null
 }
 
-module.exports = generateSemanticSentence
+// function generateSemanticSentence (sense, length) {
+//   var mc = getSemanticMarkovProcess(sense, length)
+//   return generateSentence(mc)
+// }
+
+var perec = {
+  getProcess: getSemanticMarkovProcess,
+  generate: generateSentence
+}
+
+// module.exports = generateSemanticSentence
+module.exports = perec

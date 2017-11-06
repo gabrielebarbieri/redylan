@@ -1,5 +1,5 @@
-var generate = require('./perec')
+var perec = require('./perec')
 
 self.onmessage = function (event) {
-  self.postMessage(generate(event.data, 10, 1))
+  self.postMessage(perec.getProcess(event.data, 10))
 }

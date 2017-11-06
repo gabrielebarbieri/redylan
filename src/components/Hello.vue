@@ -11,6 +11,7 @@
 </template>
 
 <script>
+  var perec = require('@/core/perec')
   var Worker = require('worker-loader!@/core/worker')
   var worker = new Worker()
   worker.post = message =>
@@ -31,7 +32,7 @@
       return {
         sentence: 'Hello World',
         isLoading: false,
-        sense: ''
+        sense: 'music'
       }
     },
     methods: {
@@ -41,9 +42,9 @@
         var vm = this
         vm.sentence = 'Computing ... '
         vm.isLoading = true
-        worker.post(vm.sense).then(function (e) {
-          console.log('Worker said: ', e)
-          vm.sentence = e[0]
+        worker.post(vm.sense).then(function (markovProcess) {
+          vm.sentence = perec.generate(markovProcess)
+          console.log(markovProcess)
           vm.isLoading = false
         })
       }
