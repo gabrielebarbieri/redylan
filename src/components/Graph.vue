@@ -4,7 +4,7 @@
       <path :d="line" />
     </g>
   </svg> -->
-  <svg width="500" height="270"></svg>
+  <svg width="960" height="600"></svg>
 </template>
 
 <script>
@@ -25,44 +25,53 @@ export default {
     var width = +svg.attr('width')
     var height = +svg.attr('height')
 
-    var nodesData = [
-    {'name': 'Travis', 'sex': 'M'},
-    {'name': 'Rake', 'sex': 'M'},
-    {'name': 'Diana', 'sex': 'F'},
-    {'name': 'Rachel', 'sex': 'F'},
-    {'name': 'Shawn', 'sex': 'M'},
-    {'name': 'Emerald', 'sex': 'F'}
-    ]
+    var color = d3.scaleOrdinal(d3.schemeCategory20)
 
-// set up the simulation
-// nodes only for now
-    var simulation = d3.forceSimulation().nodes(nodesData)
+    var simulation = d3.forceSimulation()
+    .force('link', d3.forceLink().id(function (d) { return d.id }))
+    .force('charge', d3.forceManyBody())
+    .force('center', d3.forceCenter(width / 2, height / 2))
 
-// add forces
-// we're going to add a charge to each node
-// also going to add a centering force
-    simulation
-    .force('charge_force', d3.forceManyBody())
-    .force('center_force', d3.forceCenter(width / 2, height / 2))
+    d3.json('static/miserables.json', function (error, graph) {
+      if (error) throw error
 
-// draw circles for the nodes
-    var node = svg.append('g')
-        .attr('class', 'nodes')
-        .selectAll('circle')
-        .data(nodesData)
-        .enter()
-        .append('circle')
-        .attr('r', 5)
-        .attr('fill', 'red')
+      var link = svg.append('g')
+      .attr('class', 'links')
+    .selectAll('line')
+    .data(graph.links)
+    .enter().append('line')
+      .attr('stroke-width', function (d) { return Math.sqrt(d.value) })
 
-    function tickActions () {
-    // update circle positions to reflect node updates on each tick of the simulation
-      node
+      var node = svg.append('g')
+      .attr('class', 'nodes')
+    .selectAll('circle')
+    .data(graph.nodes)
+    .enter().append('circle')
+      .attr('r', 5)
+      .attr('fill', function (d) { return color(d.group) })
+
+      node.append('title')
+      .text(function (d) { return d.id })
+
+      simulation
+      .nodes(graph.nodes)
+      .on('tick', ticked)
+
+      simulation.force('link')
+      .links(graph.links)
+
+      function ticked () {
+        link
+        .attr('x1', function (d) { return d.source.x })
+        .attr('y1', function (d) { return d.source.y })
+        .attr('x2', function (d) { return d.target.x })
+        .attr('y2', function (d) { return d.target.y })
+
+        node
         .attr('cx', function (d) { return d.x })
         .attr('cy', function (d) { return d.y })
-    }
-
-    simulation.on('tick', tickActions)
+      }
+    })
   },
   watch: {
     values: function dataChanged (newData, oldData) {
@@ -92,13 +101,23 @@ export default {
 }
 </script>
 
-<style scoped>
-svg {
+<style>
+/*svg {
   margin: 25px;
 }
 path {
   fill: none;
   stroke: #76BF8A;
   stroke-width: 3px;
+}*/
+
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
 }
 </style>
