@@ -42,8 +42,8 @@
     methods: {
       generate: function () {
         console.log(this.sense)
-
         var vm = this
+        vm.values = []
         vm.sentence = 'Computing ... '
         vm.isLoading = true
         worker.post(vm.sense).then(function (markovProcess) {
