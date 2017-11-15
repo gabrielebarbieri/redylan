@@ -143,10 +143,36 @@ function generate (markovProcess, order) {
   return sequence
 }
 
+function convertToD3 (markovProcess, order) {
+  if (markovProcess === null) return
+  var graph = {nodes: [{'id': '<s>', 'group': 0}], links: []}
+  var nodes = graph.nodes
+  for (var i = 1; i < markovProcess.length; i++) {
+    var matrix = markovProcess[i]
+
+    var links = _.flatten(_.map(nodes, function (node) {
+      var prefix = node.id
+      var suffixes = _.keys(matrix[prefix])
+      return _.map(suffixes, function (suffix) {
+        var transition = _.concat(_.split(prefix, ','), suffix)
+        var target = _.join(_.takeRight(transition, order), ',')
+        return {'source': prefix, 'target': target, 'value': matrix[prefix][suffix]}
+      })
+    }))
+    graph.links = _.concat(graph.links, links)
+
+    var nodeIds = _.uniq(_.map(links, link => link.target))
+    nodes = _.map(nodeIds, function (node) { return {'id': node, 'group': i} })
+    graph.nodes = _.concat(graph.nodes, nodes)
+  }
+  return graph
+}
+
 var markov = {
   parseSequences: parseSequences,
   getMarkovProcess: getMarkovProcess,
-  generate: generate
+  generate: generate,
+  convertToD3: convertToD3
 }
 
 module.exports = markov
