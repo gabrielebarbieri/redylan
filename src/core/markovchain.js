@@ -143,9 +143,14 @@ function generate (markovProcess, order) {
   return sequence
 }
 
+function locate (index, total) {
+  if (total === 1) return 0.5
+  return index / (total - 1)
+}
+
 function convertToD3 (markovProcess, order) {
   if (markovProcess === null) return
-  var graph = {nodes: [{'id': '<s>', 'group': 0}], links: []}
+  var graph = {nodes: [{'id': '<s>', 'x': 0, 'y': 0.5}], links: []}
   var nodes = graph.nodes
   for (var i = 1; i < markovProcess.length; i++) {
     var matrix = markovProcess[i]
@@ -162,9 +167,20 @@ function convertToD3 (markovProcess, order) {
     graph.links = _.concat(graph.links, links)
 
     var nodeIds = _.uniq(_.map(links, link => link.target))
-    nodes = _.map(nodeIds, function (node) { return {'id': node, 'group': i} })
+    nodes = _.map(nodeIds, function (node, j) {
+      return {'id': node, 'x': locate(i, markovProcess.length), 'y': locate(j, nodeIds.length)}
+    })
     graph.nodes = _.concat(graph.nodes, nodes)
   }
+  var ids = _.fromPairs(_.map(graph.nodes, node => [node.id, node]))
+  _.map(graph.links, function (link) {
+    var source = ids[link.source]
+    var target = ids[link.target]
+    link.x0 = source.x
+    link.y0 = source.y
+    link.x1 = target.x
+    link.y1 = target.y
+  })
   return graph
 }
 
