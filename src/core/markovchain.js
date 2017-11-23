@@ -152,7 +152,7 @@ function convertToD3 (markovProcess, order) {
   if (markovProcess === null) return
   var graph = {nodes: [{'id': '<s>', 'x': 0, 'y': 0.5}], links: []}
   var nodes = graph.nodes
-  for (var i = 1; i < markovProcess.length; i++) {
+  for (var i = 1; i < markovProcess.length - 1; i++) {
     var matrix = markovProcess[i]
 
     var links = _.flatten(_.map(nodes, function (node) {
@@ -173,9 +173,10 @@ function convertToD3 (markovProcess, order) {
     graph.nodes = _.concat(graph.nodes, nodes)
   }
   var ids = _.fromPairs(_.map(graph.nodes, node => [node.id, node]))
-  _.map(graph.links, function (link) {
+  _.map(graph.links, function (link, id) {
     var source = ids[link.source]
     var target = ids[link.target]
+    link.id = id
     link.x0 = source.x
     link.y0 = source.y
     link.x1 = target.x

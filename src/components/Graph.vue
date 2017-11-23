@@ -5,6 +5,7 @@
 <script>
 import * as d3 from 'd3'
 import markov from '@/core/markovchain'
+import _ from 'lodash'
 
 var order = 2
 
@@ -56,17 +57,6 @@ export default {
       } // get_path
 
       console.log(graph.links[0])
-      // var link = svg.append('g')
-      //               .attr('class', 'links')
-      //               .selectAll('line')
-      //               .data(graph.links)
-      //               .enter()
-      //               .append('line')
-      //               .attr('stroke-width', function (d) { return Math.sqrt(d.value) })
-      //               .attr('x1', function (d) { return x(d.x1) })
-      //               .attr('y1', function (d) { return y(d.y1) })
-      //               .attr('x2', function (d) { return x(d.x2) })
-      //               .attr('y2', function (d) { return y(d.y2) })
 
       var link = svg.append('g')
                     .selectAll('.link')
@@ -74,9 +64,8 @@ export default {
                     .enter()
                     .append('path')
                     .attr('class', 'link')
-                    .attr('d', function (d) {
-                      return getPath(d)
-                    })
+                    .attr('id', function (d) { return 'link' + d.id })
+                    .attr('d', function (d) { return getPath(d) })
 
       console.log(link)
       var node = svg.append('g')
@@ -84,36 +73,31 @@ export default {
                     .selectAll('circle')
                     .data(graph.nodes)
                     .enter().append('circle')
-                    .attr('r', 5)
+                    .attr('r', 0)
                     .attr('cx', function (d) { return x(d.x) })
                     .attr('cy', function (d) { return y(d.y) })
 
       node.append('title').text(function (d) { return d.id })
 
-      // simulation.nodes(graph.nodes).on('tick', ticked)
-      // simulation.force('link').links(graph.links)
-
-      // function ticked () {
-      //   link
-      //     .attr('x1', function (d) { return d.source.x })
-      //     .attr('y1', function (d) { return d.source.y })
-      //     .attr('x2', function (d) { return d.target.x })
-      //     .attr('y2', function (d) { return d.target.y })
-
-      //   node
-      //     .attr('cx', function (d) { return d.x })
-      //     .attr('cy', function (d) { return d.y })
-      // }
+      svg.append('g')
+         .attr('class', 'label')
+         .selectAll('.label')
+         .data(graph.links)
+         .enter()
+         .append('text')
+         .attr('dy', 3)
+         // .attr('width', 500)
+         .style('text-anchor', 'middle')
+         .append('textPath')
+         .attr('startOffset', '50%')
+         .attr('xlink:href', function (d) { return '#link' + d.id })
+         .text(function (d) { return _.last(_.split(d.target, ',')) })
     }
   }
 }
 </script>
 
 <style>
-.links line {
-  stroke: #999;
-  stroke-opacity: 0.6;
-}
 
 .nodes circle {
   stroke: #fff;
@@ -123,9 +107,15 @@ export default {
 
 .link {
   fill: none;
-  stroke: #555;
-  stroke-opacity: 0.4;
-  stroke-width: 1.5px;
+  stroke: #4fc08d;
+  stroke-opacity: 0.1;
+  stroke-width: 2.5px;
+}
+
+.label {
+  stroke: #4fc08d;
+  opacity: 0.3;
+  font-size: 15px ;
 }
 
 </style>
