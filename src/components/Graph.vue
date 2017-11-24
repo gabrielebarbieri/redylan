@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import * as d3 from 'd3'
+import * as d3 from 'd3-interpolate'
 import _ from 'lodash'
 
 export default {
@@ -38,7 +38,6 @@ export default {
       var x1 = this.x(link.x1)
       var xi = d3.interpolateNumber(x0, x1)
       var x2 = xi(curvature)
-      console.log(x2)
       var x3 = xi(1 - curvature)
       var y0 = this.y(link.y0)
       var y1 = this.y(link.y1)
