@@ -1,32 +1,27 @@
 <template>
-  <svg width="960" height="200"></svg>
+  <svg width="960" height="200">
+  </svg>
 </template>
 
 <script>
 import * as d3 from 'd3'
-import markov from '@/core/markovchain'
 import _ from 'lodash'
-
-var order = 2
 
 export default {
   name: 'vue-generation-graph',
-  props: ['markovProcess'],
+  props: ['graph'],
   mounted () {
-    this.calculateGraph()
+    this.displayGraph()
   },
   watch: {
-    markovProcess: function dataChanged (newData, oldData) {
-      this.calculateGraph()
+    graph: function dataChanged (newData, oldData) {
+      this.displayGraph()
     }
   },
   methods: {
 
-    calculateGraph () {
-      if (this.markovProcess === null) return
-
-      var graph = markov.convertToD3(this.markovProcess, order)
-      console.log(graph)
+    displayGraph () {
+      if (this.graph === undefined || this.graph === null) return
       var svg = d3.select(this.$el)
       svg.selectAll('*').remove()
       var width = +svg.attr('width')
@@ -56,37 +51,22 @@ export default {
                 ' ' + x1 + ',' + y1
       } // get_path
 
-      console.log(graph.links[0])
-
-      var link = svg.append('g')
-                    .selectAll('.link')
-                    .data(graph.links)
-                    .enter()
-                    .append('path')
-                    .attr('class', 'link')
-                    .attr('id', function (d) { return 'link' + d.id })
-                    .attr('d', function (d) { return getPath(d) })
-
-      console.log(link)
-      var node = svg.append('g')
-                    .attr('class', 'nodes')
-                    .selectAll('circle')
-                    .data(graph.nodes)
-                    .enter().append('circle')
-                    .attr('r', 0)
-                    .attr('cx', function (d) { return x(d.x) })
-                    .attr('cy', function (d) { return y(d.y) })
-
-      node.append('title').text(function (d) { return d.id })
+      svg.append('g')
+         .selectAll('.link')
+         .data(this.graph.links)
+         .enter()
+         .append('path')
+         .attr('class', 'link')
+         .attr('id', function (d) { return 'link' + d.id })
+         .attr('d', function (d) { return getPath(d) })
 
       svg.append('g')
          .attr('class', 'label')
          .selectAll('.label')
-         .data(graph.links)
+         .data(this.graph.links)
          .enter()
          .append('text')
          .attr('dy', 3)
-         // .attr('width', 500)
          .style('text-anchor', 'middle')
          .append('textPath')
          .attr('startOffset', '50%')

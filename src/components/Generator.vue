@@ -7,7 +7,7 @@
       </div>
       <button class="ui button" :class="{loading: isLoading}" v-on:click="generate">Generate</button>
     </div>
-    <graph :markovProcess="markovProcess"></graph>
+    <graph :graph="markovProcessGraph"></graph>
   </div>
 </template>
 
@@ -36,6 +36,15 @@
         isLoading: false,
         sense: 'music',
         markovProcess: null
+      }
+    },
+    computed: {
+      markovProcessGraph: function () {
+        if (this.markovProcess !== null) {
+          var g = perec.convertToD3(this.markovProcess)
+          console.log(g)
+          return g
+        }
       }
     },
     methods: {
