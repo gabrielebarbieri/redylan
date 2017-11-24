@@ -1,5 +1,11 @@
 <template>
   <svg width="960" height="200">
+    <g v-for="link in links">
+      <path class="link" :d="getPath(link)" :id="'link' + link.id"></path>
+      <text dy="3" class="label">
+        <textPath startOffset="50%" :xlink:href="'#link' + link.id">{{getLabal(link)}}</textPath>
+      </text>
+    </g>
   </svg>
 </template>
 
@@ -10,69 +16,38 @@ import _ from 'lodash'
 export default {
   name: 'vue-generation-graph',
   props: ['graph'],
-  mounted () {
-    this.displayGraph()
-  },
-  watch: {
-    graph: function dataChanged (newData, oldData) {
-      this.displayGraph()
+  computed: {
+    links: function () {
+      if (this.graph === undefined || this.graph === null) return []
+      return this.graph.links
     }
   },
   methods: {
+    x (v) {
+      return v * (this.graph.width - 20) + 10
+    },
+    y (v) {
+      return v * (this.graph.height - 20) + 10
+    },
+    getLabal (link) {
+      return _.last(_.split(link.target, ','))
+    },
+    getPath (link) {
+      var curvature = 0.5
+      var x0 = this.x(link.x0)
+      var x1 = this.x(link.x1)
+      var xi = d3.interpolateNumber(x0, x1)
+      var x2 = xi(curvature)
+      console.log(x2)
+      var x3 = xi(1 - curvature)
+      var y0 = this.y(link.y0)
+      var y1 = this.y(link.y1)
 
-    displayGraph () {
-      if (this.graph === undefined || this.graph === null) return
-      var svg = d3.select(this.$el)
-      svg.selectAll('*').remove()
-      var width = +svg.attr('width')
-      var height = +svg.attr('height')
-
-      function x (v) {
-        return v * (width - 20) + 10
-      }
-
-      function y (v) {
-        return v * (height - 20) + 10
-      }
-
-      function getPath (link) {
-        var curvature = 0.5
-        var x0 = x(link.x0)
-        var x1 = x(link.x1)
-        var xi = d3.interpolateNumber(x0, x1)
-        var x2 = xi(curvature)
-        var x3 = xi(1 - curvature)
-        var y0 = y(link.y0)
-        var y1 = y(link.y1)
-
-        return 'M' + x0 + ',' + y0 +
-                'C' + x2 + ',' + y0 +
-                ' ' + x3 + ',' + y1 +
-                ' ' + x1 + ',' + y1
-      } // get_path
-
-      svg.append('g')
-         .selectAll('.link')
-         .data(this.graph.links)
-         .enter()
-         .append('path')
-         .attr('class', 'link')
-         .attr('id', function (d) { return 'link' + d.id })
-         .attr('d', function (d) { return getPath(d) })
-
-      svg.append('g')
-         .attr('class', 'label')
-         .selectAll('.label')
-         .data(this.graph.links)
-         .enter()
-         .append('text')
-         .attr('dy', 3)
-         .style('text-anchor', 'middle')
-         .append('textPath')
-         .attr('startOffset', '50%')
-         .attr('xlink:href', function (d) { return '#link' + d.id })
-         .text(function (d) { return _.last(_.split(d.target, ',')) })
-    }
+      return 'M' + x0 + ',' + y0 +
+              'C' + x2 + ',' + y0 +
+              ' ' + x3 + ',' + y1 +
+              ' ' + x1 + ',' + y1
+    } // get_path
   }
 }
 </script>
@@ -96,6 +71,7 @@ export default {
   stroke: #4fc08d;
   opacity: 0.3;
   font-size: 15px ;
+  text-anchor: middle;
 }
 
 </style>

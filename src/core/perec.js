@@ -71,6 +71,8 @@ function convertToD3 (markovProcess) {
     link.x1 = target.x
     link.y1 = target.y
   })
+  graph.width = 960
+  graph.height = 200
   return graph
 }
 
