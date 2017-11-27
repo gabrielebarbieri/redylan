@@ -1,9 +1,11 @@
 <template>
   <svg width="960" height="200">
     <g v-for="link in links">
-      <path class="link" :d="getPath(link)" :id="'link' + link.id"></path>
+      <path class="link" :d="getPath(link)" :id="'link' + link.id" v-bind:style="getLinkStyle(link)"></path>
       <text dy="3" class="label">
-        <textPath startOffset="50%" :xlink:href="'#link' + link.id">{{getLabal(link)}}</textPath>
+        <textPath startOffset="50%" :xlink:href="'#link' + link.id" v-bind:style="getLabelStyle(link)">
+          {{getLabel(link)}}
+        </textPath>
       </text>
     </g>
   </svg>
@@ -29,8 +31,24 @@ export default {
     y (v) {
       return v * (this.graph.height - 20) + 10
     },
-    getLabal (link) {
+    getLabel (link) {
       return _.last(_.split(link.target, ','))
+    },
+    getLinkStyle (link) {
+      return {
+        fill: 'none',
+        stroke: '#4fc08d',
+        strokeOpacity: 0.1,
+        strokeWidth: '2.5px'
+      }
+    },
+    getLabelStyle (link) {
+      return {
+        stroke: '#4fc08d',
+        opacity: 0.3,
+        fontSize: '15px',
+        textAnchor: 'middle'
+      }
     },
     getPath (link) {
       var curvature = 0.5
@@ -50,27 +68,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-.nodes circle {
-  stroke: #fff;
-  stroke-width: 1.5px;
-  fill: #4fc08d;
-}
-
-.link {
-  fill: none;
-  stroke: #4fc08d;
-  stroke-opacity: 0.1;
-  stroke-width: 2.5px;
-}
-
-.label {
-  stroke: #4fc08d;
-  opacity: 0.3;
-  font-size: 15px ;
-  text-anchor: middle;
-}
-
-</style>
