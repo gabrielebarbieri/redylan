@@ -32,20 +32,20 @@ export default {
       return v * (this.graph.height - 20) + 10
     },
     getLabel (link) {
-      return _.last(_.split(link.target, ','))
+      return _.last(_.split(link.label, ','))
     },
     getLinkStyle (link) {
       return {
         fill: 'none',
-        stroke: '#4fc08d',
-        strokeOpacity: 0.1,
+        stroke: link.selected ? 'rgb(31, 80, 128)' : '#4fc08d',
+        strokeOpacity: link.selected ? 0.3 : 0.1,
         strokeWidth: '2.5px'
       }
     },
     getLabelStyle (link) {
       return {
-        stroke: '#4fc08d',
-        opacity: 0.3,
+        stroke: link.selected ? 'rgb(31, 80, 128)' : '#4fc08d',
+        opacity: link.selected ? 1 : 0.2,
         fontSize: '15px',
         textAnchor: 'middle'
       }

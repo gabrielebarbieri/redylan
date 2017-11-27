@@ -35,13 +35,15 @@
         sentence: 'Hello World',
         isLoading: false,
         sense: 'music',
-        markovProcess: null
+        markovProcess: null,
+        sequence: null
       }
     },
     computed: {
       markovProcessGraph: function () {
         if (this.markovProcess !== null) {
-          var g = perec.convertToD3(this.markovProcess)
+          var g = perec.convertToGraph(this.markovProcess)
+          perec.colorSentence(g, this.sequence)
           console.log(g)
           return g
         }
@@ -55,7 +57,8 @@
         vm.sentence = 'Computing ... '
         vm.isLoading = true
         worker.post(vm.sense).then(function (markovProcess) {
-          vm.sentence = perec.generate(markovProcess)
+          vm.sequence = perec.generate(markovProcess)
+          vm.sentence = perec.represent(vm.sequence)
           vm.markovProcess = markovProcess
           vm.isLoading = false
         })

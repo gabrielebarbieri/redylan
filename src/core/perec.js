@@ -6,7 +6,11 @@ var _ = require('lodash')
 var ORDER = dylanMatrices.length - 1
 
 function generateSentence (markovProcess) {
-  return _.join(_.slice(markov.generate(markovProcess, ORDER), 1, -1), ' ')
+  return markov.generate(markovProcess, ORDER)
+}
+
+function represent (sentence) {
+  return _.join(_.slice(sentence, 1, -1), ' ')
 }
 
 function getConstraints (words, index, length) {
@@ -37,49 +41,68 @@ function locate (index, total) {
   return index / (total - 1)
 }
 
-function convertToD3 (markovProcess) {
+function convertToGraph (markovProcess) {
   if (markovProcess === null) return
-  var graph = {nodes: [{'id': '<s>', 'x': 0, 'y': 0.5}], links: []}
+
+  var graph = {nodes: [{'label': '<s>', 'x': 0, 'y': 0.5}], links: []}
   var nodes = graph.nodes
   for (var i = 1; i < markovProcess.length - 1; i++) {
     var matrix = markovProcess[i]
-
+    var targetToLink = {}
     var links = _.flatten(_.map(nodes, function (node) {
-      var prefix = node.id
+      var prefix = node.label
       var suffixes = _.keys(matrix[prefix])
+      node.links = {}
       return _.map(suffixes, function (suffix) {
         var transition = _.concat(_.split(prefix, ','), suffix)
         var target = _.join(_.takeRight(transition, ORDER), ',')
-        return {'source': prefix, 'target': target, 'value': matrix[prefix][suffix]}
+        var link = {'source': node, 'label': target, 'value': matrix[prefix][suffix], 'selected': false}
+        node.links[target] = link
+        targetToLink[target] === undefined ? targetToLink[target] = [link] : targetToLink[target].push(link)
+        return link
       })
     }))
-    graph.links = _.concat(graph.links, links)
 
-    var nodeIds = _.uniq(_.map(links, link => link.target))
-    nodes = _.map(nodeIds, function (node, j) {
-      return {'id': node, 'x': locate(i, markovProcess.length), 'y': locate(j, nodeIds.length)}
+    var targets = _.keys(targetToLink)
+    nodes = _.map(targets, function (target, j) {
+      var node = {'label': target, 'x': locate(i, markovProcess.length), 'y': locate(j, targets.length)}
+      _.map(targetToLink[target], function (link) { link.target = node })
+      return node
     })
+
+    graph.links = _.concat(graph.links, links)
     graph.nodes = _.concat(graph.nodes, nodes)
   }
-  var ids = _.fromPairs(_.map(graph.nodes, node => [node.id, node]))
   _.map(graph.links, function (link, id) {
-    var source = ids[link.source]
-    var target = ids[link.target]
     link.id = id
-    link.x0 = source.x
-    link.y0 = source.y
-    link.x1 = target.x
-    link.y1 = target.y
+    link.x0 = link.source.x
+    link.y0 = link.source.y
+    link.x1 = link.target.x
+    link.y1 = link.target.y
   })
   graph.width = 960
   graph.height = 200
   return graph
 }
 
+function colorSentence (graph, sentence) {
+  _.map(graph.links, function (link) { link.selected = false })
+  if (sentence === undefined || sentence === null) return
+  var node = graph.nodes[0]
+  for (var i = 2; i < sentence.length; i++) {
+    var words = _.takeRight(_.take(sentence, i), ORDER)
+    var link = node.links[words]
+    link.selected = true
+    node = link.target
+  }
+}
+
 var perec = {
   getProcess: getSemanticMarkovProcess,
   generate: generateSentence,
-  convertToD3: convertToD3
+  represent: represent,
+  convertToGraph: convertToGraph,
+  colorSentence: colorSentence
 }
 
 module.exports = perec
