@@ -5,7 +5,8 @@
       <div class="ui input">
         <input type="text" v-model="sense" placeholder="Semantic sense">
       </div>
-      <button class="ui button" :class="{loading: isLoading}" v-on:click="generate">Generate</button>
+      <button class="ui button" :class="{loading: isLoading}" v-on:click="fit">Fit</button>
+      <button class="ui button" :class="{disabled: markovProcess === null}" v-on:click="generate">Generate</button>
     </div>
     <graph :graph="markovProcessGraph"></graph>
   </div>
@@ -32,9 +33,9 @@
     name: 'generator',
     data () {
       return {
-        sentence: 'Hello World',
-        isLoading: false,
         sense: 'music',
+        sentence: 'Click on the fit button to train a model',
+        isLoading: false,
         markovProcess: null,
         sequence: null
       }
@@ -50,18 +51,25 @@
       }
     },
     methods: {
-      generate: function () {
-        console.log(this.sense)
+      fit: function () {
         var vm = this
         vm.markovProcess = null
+        vm.sequence = null
         vm.sentence = 'Computing ... '
         vm.isLoading = true
         worker.post(vm.sense).then(function (markovProcess) {
-          vm.sequence = perec.generate(markovProcess)
-          vm.sentence = perec.represent(vm.sequence)
+          // vm.sequence = perec.generate(markovProcess)
+          // vm.sentence = perec.represent(vm.sequence)
           vm.markovProcess = markovProcess
+          vm.sentence = 'Click on generate to get a sentence'
           vm.isLoading = false
         })
+      },
+      generate: function () {
+        var vm = this
+        if (vm.markovProcess === null) return
+        vm.sequence = perec.generate(vm.markovProcess)
+        vm.sentence = perec.represent(vm.sequence)
       }
     },
     components: {

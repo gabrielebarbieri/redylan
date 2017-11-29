@@ -86,6 +86,8 @@ function convertToGraph (markovProcess) {
 }
 
 function colorSentence (graph, sentence) {
+  if (graph === undefined || graph === null) return
+  console.log(sentence)
   _.map(graph.links, function (link) { link.selected = false })
   if (sentence === undefined || sentence === null) return
   var node = graph.nodes[0]
