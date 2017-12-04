@@ -10,7 +10,16 @@ function generateSentence (markovProcess) {
 }
 
 function represent (sentence) {
-  return _.join(_.slice(sentence, 1, -1), ' ')
+  var re = /[a-zA-Z0-9]/
+  var words = _.slice(sentence, 1, -1)
+  words[0] = _.capitalize(words[0])
+  var res = _.reduce(words, function (result, word) {
+    word = word === 'i' ? 'I' : word
+    var sep = ' '
+    if (!re.test(word.charAt(0)) || word === "n't") sep = ''
+    return result + sep + word
+  })
+  return res
 }
 
 function getConstraints (words, index, length) {
@@ -108,3 +117,8 @@ var perec = {
 }
 
 module.exports = perec
+
+console.log(represent(['', 'there', 'was', 'music', 'in', 'the', 'wind', 'it', 'was', 'i', '?', '']))
+// var re = RegExp('^[a-zA-Z0-9- ]*$')
+// var l = _.filter(_.keys(dylanMatrices[0]['']), w => !re.test(w))
+// console.log(l)
