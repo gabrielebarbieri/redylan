@@ -1,6 +1,7 @@
 var markov = require('./markovchain')
 var dylanMatrices = require('./dylan_matrices.json')
 var similarities = require('./word_similarities.json')
+var rhymes = require('./rhymes.json')
 var _ = require('lodash')
 
 var ORDER = dylanMatrices.length - 1
@@ -10,6 +11,11 @@ function generateSentence (markovProcess) {
 }
 
 function represent (sentence) {
+  // To display all the words containing punctuation:
+  // var re = RegExp('^[a-zA-Z0-9- ]*$')
+  // var l = _.filter(_.keys(dylanMatrices[0]['']), w => !re.test(w))
+  // console.log(l)
+
   var re = /[a-zA-Z0-9]/
   var words = _.slice(sentence, 1, -1)
   words[0] = _.capitalize(words[0])
@@ -26,6 +32,7 @@ function getConstraints (words, index, length) {
   var cts = _.fill(Array(length), null)
   cts[index] = words
   cts.unshift(['<s>'])
+  cts.push(rhymes.say)
   cts.push(['</s>'])
   return cts
 }
@@ -117,8 +124,3 @@ var perec = {
 }
 
 module.exports = perec
-
-console.log(represent(['', 'there', 'was', 'music', 'in', 'the', 'wind', 'it', 'was', 'i', '?', '']))
-// var re = RegExp('^[a-zA-Z0-9- ]*$')
-// var l = _.filter(_.keys(dylanMatrices[0]['']), w => !re.test(w))
-// console.log(l)
