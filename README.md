@@ -2,6 +2,16 @@
 
 > Remixing dylan lyrics with style using constrained markov process
 
+# TO DO
+
+[ ]  Add a search input fiels for the lyrics sense, try this: https://github.com/moreta/vue-search-select
+[ ]  Generate a whole lyrics from a ryhme scheme, see: https://en.wikipedia.org/wiki/Rhyme_scheme
+[ ]  Generate and display lyrics inside cards: 	https://semantic-ui.com/views/card.html
+[ ]  Add a menu bar
+[ ]  Add a *How it works* page that display a single verse + the graph
+[ ]  Give the possibility to download lyrics
+[ ]  Add some unsplach photo to the lyrics cards (https://source.unsplash.com/)
+
 ## Build Setup
 
 ``` bash
