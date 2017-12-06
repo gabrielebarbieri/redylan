@@ -1,8 +1,8 @@
-# redylan
+# Redylan
 
 > Remixing dylan lyrics with style using constrained markov process
 
-# TO DO
+# Todo
 
 * Add a search input fiels for the lyrics sense, try this: https://github.com/moreta/vue-search-select
 * Generate a whole lyrics from a ryhme scheme, see: https://en.wikipedia.org/wiki/Rhyme_scheme
