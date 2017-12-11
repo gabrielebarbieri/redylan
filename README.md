@@ -4,7 +4,8 @@
 
 # Todo
 
-* Add a search input fiels for the lyrics sense, try this: https://github.com/moreta/vue-search-select
+* Migrate to ElementUI http://element.eleme.io/#/en-US
+* Add a search input fiels for the lyrics sense
 * Generate a whole lyrics from a ryhme scheme, see: https://en.wikipedia.org/wiki/Rhyme_scheme
 * Generate and display lyrics inside cards: 	https://semantic-ui.com/views/card.html
 * Add a menu bar

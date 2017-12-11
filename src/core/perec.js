@@ -115,12 +115,17 @@ function colorSentence (graph, sentence) {
   }
 }
 
+function getWords () {
+  return _.keys(similarities)
+}
+
 var perec = {
   getProcess: getSemanticMarkovProcess,
   generate: generateSentence,
   represent: represent,
   convertToGraph: convertToGraph,
-  colorSentence: colorSentence
+  colorSentence: colorSentence,
+  words: getWords
 }
 
 module.exports = perec
