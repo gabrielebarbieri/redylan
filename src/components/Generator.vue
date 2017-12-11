@@ -1,19 +1,18 @@
 <template>
   <div>
-    <h1>{{sentence}}</h1>
-    <div>
-      <div class="ui input">
-        <input type="text" v-model="sense" placeholder="Semantic sense">
-      </div>
-      <button class="ui button" :class="{loading: isLoading}" v-on:click="fit">Fit</button>
-      <button class="ui button" :class="{disabled: markovProcess === null}" v-on:click="generate">Generate</button>
-    </div>
+    <h2>{{sentence}}</h2>
+    <el-row >
+      <search v-model="sense"></search>
+      <el-button type="primary" :loading="isLoading" v-on:click="fit" style="margin-left: 10px;">Fit</el-button>
+      <el-button type="primary" v-bind:disabled="markovProcess===null" v-on:click="generate">Generate</el-button>
+    </el-row>
     <graph :graph="markovProcessGraph"></graph>
   </div>
 </template>
 
 <script>
   import Graph from '@/components/Graph'
+  import Search from '@/components/Search'
   var perec = require('@/core/perec')
   var Worker = require('worker-loader!@/core/worker')
   var worker = new Worker()
@@ -33,7 +32,7 @@
     name: 'generator',
     data () {
       return {
-        sense: 'music',
+        sense: '',
         sentence: 'Click on the fit button to train a model',
         isLoading: false,
         markovProcess: null,
@@ -45,7 +44,6 @@
         if (this.markovProcess !== null) {
           var g = perec.convertToGraph(this.markovProcess)
           perec.colorSentence(g, this.sequence)
-          console.log(g)
           return g
         }
       }
@@ -57,6 +55,7 @@
         vm.sequence = null
         vm.sentence = 'Computing ... '
         vm.isLoading = true
+        console.log(vm.sense)
         worker.post(vm.sense).then(function (markovProcess) {
           // vm.sequence = perec.generate(markovProcess)
           // vm.sentence = perec.represent(vm.sequence)
@@ -73,7 +72,15 @@
       }
     },
     components: {
-      'graph': Graph
+      'graph': Graph,
+      'search': Search
     }
   }
 </script>
+
+<style>
+  .input {
+    display: inline-block;
+    /*width: 130px;*/
+  }
+</style>

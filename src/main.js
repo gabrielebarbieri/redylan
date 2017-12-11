@@ -2,12 +2,13 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import SuiVue from 'semantic-ui-vue'
-import 'semantic-ui-css/semantic.min.css'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/en'
 import router from './router'
 
 Vue.config.productionTip = false
-Vue.use(SuiVue)
+Vue.use(ElementUI, {locale})
 
 /* eslint-disable no-new */
 new Vue({

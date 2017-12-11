@@ -116,7 +116,7 @@ function colorSentence (graph, sentence) {
 }
 
 function getWords () {
-  return _.keys(similarities)
+  return _.map(_.keys(similarities), (word) => ({'value': word}))
 }
 
 var perec = {
