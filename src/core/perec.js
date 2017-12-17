@@ -32,7 +32,6 @@ function getConstraints (words, index, length) {
   var cts = _.fill(Array(length), null)
   cts[index] = words
   cts.unshift(['<s>'])
-  cts.push(rhymes.say)
   cts.push(['</s>'])
   return cts
 }
@@ -50,6 +49,49 @@ function getSemanticMarkovProcess (sense, length) {
     }
   }
   return null
+}
+
+function getRhymingMarkovProcess (rhyme) {
+  var words = rhymes[rhyme]
+
+  var lengths = _.shuffle(_.range(8, 20))
+  for (var i = 0; i < lengths.length; i++) {
+    var length = lengths[i]
+    var cts = getConstraints(words, length - 1, length)
+    try {
+      return markov.getMarkovProcess(dylanMatrices, cts)
+    } catch (err) {
+    }
+  }
+  return null
+}
+
+function generateSong (sense, rhymeScheme, handle) {
+  var length = 10
+  var rhymes = {}
+  return _.map(rhymeScheme, function (r) {
+    var verse = ''
+    if (r !== ' ') {
+      var rhyme = rhymes[r]
+      if (rhyme === undefined) {
+        var sequence = generateSentence(getSemanticMarkovProcess(sense, length))
+        rhymes[r] = getRhyme(sequence)
+        verse = represent(sequence)
+      } else {
+        verse = represent(generateSentence(getRhymingMarkovProcess(rhyme)))
+      }
+    }
+    handle(verse)
+  })
+}
+
+function getRhyme (sentence) {
+  var words = _.slice(sentence, 1, -1)
+  var re = RegExp('^[a-zA-Z0-9- ]*$')
+  for (var i = words.length - 1; i >= 0; i--) {
+    var w = words[i]
+    if (re.test(w)) return w
+  }
 }
 
 function locate (index, total) {
