@@ -54,7 +54,7 @@ function getSemanticMarkovProcess (sense, length) {
 function getRhymingMarkovProcess (rhyme) {
   var words = rhymes[rhyme]
 
-  var lengths = _.shuffle(_.range(8, 20))
+  var lengths = _.range(8, 20)
   for (var i = 0; i < lengths.length; i++) {
     var length = lengths[i]
     var cts = getConstraints(words, length - 1, length)
@@ -167,7 +167,10 @@ var perec = {
   represent: represent,
   convertToGraph: convertToGraph,
   colorSentence: colorSentence,
-  words: getWords
+  words: getWords,
+  generateSong: generateSong
 }
 
 module.exports = perec
+
+// generateSong('music', 'ABAB CDCD EFEF', console.log)
