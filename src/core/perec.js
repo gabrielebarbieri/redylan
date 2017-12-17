@@ -66,14 +66,15 @@ function getRhymingMarkovProcess (rhyme) {
   return null
 }
 
-function generateSong (sense, rhymeScheme, handle) {
+function generateSong (senses, rhymeScheme, handle) {
   var length = 10
   var rhymes = {}
-  return _.map(rhymeScheme, function (r) {
+  return _.map(rhymeScheme, function (r, i) {
     var verse = ''
     if (r !== ' ') {
       var rhyme = rhymes[r]
       if (rhyme === undefined) {
+        var sense = senses[i % senses.length]
         var sequence = generateSentence(getSemanticMarkovProcess(sense, length))
         rhymes[r] = getRhyme(sequence)
         verse = represent(sequence)
@@ -173,4 +174,4 @@ var perec = {
 
 module.exports = perec
 
-// generateSong('music', 'ABAB CDCD EFEF', console.log)
+// generateSong(['music', 'love'], 'ABAB CDCD EFEF', console.log)
