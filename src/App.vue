@@ -2,11 +2,15 @@
   <el-container id="app">
     <el-header>
       <el-row type="flex">
-        <el-col :span="2"><img src="./assets/logo.png" height="64px;" width="64px;" align="center"></el-col>
+        <el-col :span="2">
+          <a href="#/" v-on:click="handleSelect('/', '/')">
+            <img src="./assets/logo.png" height="64px;" width="64px;" align="center">
+          </a>
+        </el-col>
         <el-col>
-      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">Song generator</el-menu-item>
-        <el-menu-item index="3">How it works</el-menu-item>
+      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
+        <el-menu-item index="/">Song generator</el-menu-item>
+        <el-menu-item index="/how-it-works/">How it works</el-menu-item>
       </el-menu>
         </el-col>
       </el-row>
@@ -21,8 +25,21 @@
 </template>
 
 <script>
+
 export default {
-  name: 'app'
+  name: 'app',
+  data () {
+    return {
+      activeIndex: '/'
+    }
+  },
+  methods: {
+    handleSelect (key, keyPath) {
+      console.log(this.activeIndex)
+      this.activeIndex = key
+      console.log(this.activeIndex)
+    }
+  }
 }
 </script>
 
