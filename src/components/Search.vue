@@ -35,7 +35,6 @@
         this.$emit('input', value)
       },
       handleSelect (item) {
-        console.log(item)
       }
     },
     mounted () {

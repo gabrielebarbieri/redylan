@@ -21,7 +21,7 @@
     data () {
       return {
         sense: '',
-        sentence: 'Click on the fit button to train a model',
+        sentence: 'Click on the fit button to train a super model',
         isLoading: false,
         markovProcess: null,
         sequence: null
@@ -43,8 +43,7 @@
         vm.sequence = null
         vm.sentence = 'Computing ... '
         vm.isLoading = true
-        console.log(vm.sense)
-        worker.post(vm.sense).then(function (markovProcess) {
+        worker.generateMarkovProcess(vm.sense).then(function (markovProcess) {
           // vm.sequence = perec.generate(markovProcess)
           // vm.sentence = perec.represent(vm.sequence)
           vm.markovProcess = markovProcess
