@@ -14,19 +14,7 @@
   import Graph from '@/components/Graph'
   import Search from '@/components/Search'
   var perec = require('@/core/perec')
-  var Worker = require('worker-loader!@/core/worker')
-  var worker = new Worker()
-  worker.post = message =>
-    new Promise((resolve, reject) => {
-      worker.onmessage = event => {
-        resolve(event.data)
-      }
-      worker.onerror = e => {
-        console.error(`Error: Line ${e.lineno} in ${e.filename}: ${e.message}`)
-        reject(e)
-      }
-      worker.postMessage(message)
-    })
+  import worker from '@/core/workerclient'
 
   export default {
     name: 'generator',
