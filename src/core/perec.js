@@ -69,7 +69,7 @@ function getRhymingMarkovProcess (rhyme) {
 function generateSong (senses, rhymeScheme, handle) {
   var length = 10
   var rhymes = {}
-  return _.map(rhymeScheme, function (r, i) {
+  var song = _.map(rhymeScheme, function (r, i) {
     var verse = ''
     if (r !== ' ') {
       var rhyme = rhymes[r]
@@ -84,6 +84,8 @@ function generateSong (senses, rhymeScheme, handle) {
     }
     handle(verse)
   })
+  handle('</s>')
+  return song
 }
 
 function getRhyme (sentence) {

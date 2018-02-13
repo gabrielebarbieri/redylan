@@ -15,9 +15,13 @@ worker.generateMarkovProcess = message =>
     worker.postMessage(['getProcess', message])
   })
 
-worker.generateSong = function (callback) {
+worker.generateSong = function (handleVerse, handleEnding) {
   worker.onmessage = event => {
-    callback(event.data)
+    if (event.data !== '</s>') {
+      handleVerse(event.data)
+    } else if (handleEnding !== undefined) {
+      handleEnding()
+    }
   }
   worker.onerror = e => {
     console.error(`Error: Line ${e.lineno} in ${e.filename}: ${e.message}`)
