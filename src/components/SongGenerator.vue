@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h1>Generate a song in the style of Bob Dylan</h1>
-		<el-button type="primary" v-on:click="generateSong">Generate Song</el-button>
+		<el-button type="primary" v-on:click="generateSong" :loading="isGenerating">Generate Song</el-button>
     <p>
 		  <div v-for="verse in verses">{{verse}}<br></div>
     </p>
@@ -9,19 +9,22 @@
 </template>
 
 <script>
-  import worker from '@/core/workerclient'
+  import {songWorker} from '@/core/workerclient'
+  console.log(songWorker)
   export default {
     name: 'song-generator',
     data () {
       return {
-        verses: []
+        verses: [],
+        isGenerating: false
       }
     },
     methods: {
       generateSong: function () {
         var vm = this
+        vm.isGenerating = true
         vm.clean()
-        worker.generateSong(vm.addVerse, vm.songGenerated)
+        songWorker.generate(vm.addVerse, vm.songGenerated)
       },
       addVerse: function (verse) {
         this.verses.push(verse)
@@ -30,7 +33,7 @@
         this.verses = []
       },
       songGenerated: function () {
-        console.log('Song generated')
+        this.isGenerating = false
       }
     }
 }

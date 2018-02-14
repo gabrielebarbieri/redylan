@@ -14,7 +14,7 @@
   import Graph from '@/components/Graph'
   import Search from '@/components/Search'
   var perec = require('@/core/perec')
-  import worker from '@/core/workerclient'
+  import {markovProcessWorker} from '@/core/workerclient'
 
   export default {
     name: 'generator',
@@ -43,7 +43,7 @@
         vm.sequence = null
         vm.sentence = 'Computing ... '
         vm.isLoading = true
-        worker.generateMarkovProcess(vm.sense).then(function (markovProcess) {
+        markovProcessWorker.generate(vm.sense).then(function (markovProcess) {
           // vm.sequence = perec.generate(markovProcess)
           // vm.sentence = perec.represent(vm.sequence)
           vm.markovProcess = markovProcess
