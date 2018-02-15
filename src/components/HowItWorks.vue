@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h1>How it works ?</h1>
-		An exemple
+		<iframe width="560" height="315" src="https://www.youtube.com/embed/1rdE_0mHjjQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 		<generator></generator>
 	</div>
 </template>
