@@ -69,12 +69,14 @@ function getRhymingMarkovProcess (rhyme) {
 function generateSong (senses, rhymeScheme, handle) {
   var length = 10
   var rhymes = {}
-  var song = _.map(rhymeScheme, function (r, i) {
+  var i = 0
+  var song = _.map(rhymeScheme, function (r) {
     var verse = ''
     if (r !== ' ') {
       var rhyme = rhymes[r]
       if (rhyme === undefined) {
         var sense = senses[i % senses.length]
+        i = i + 1
         var sequence = generateSentence(getSemanticMarkovProcess(sense, length))
         rhymes[r] = getRhyme(sequence)
         verse = represent(sequence)
