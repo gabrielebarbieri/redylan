@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h1>Generate a song in the style of Bob Dylan</h1>
-    <el-select v-model="scheme" placeholder="Song structure">
+    Choose the structure of your song: <el-select v-model="scheme" placeholder="Song structure">
       <el-option
         v-for="rhyme in rhymes"
         :key="rhyme.value"
@@ -9,7 +9,10 @@
         :value="rhyme.value">
       </el-option>
     </el-select>
-    <el-row><search v-for="s in senses" :key="s.rhyme" v-model="s.sense"></search></el-row>
+    <el-row>
+      <span v-if="senses.length">Choose up to {{senses.length}} themes for your song:</span>
+      <search v-for="s in senses" :key="s.rhyme" v-model="s.sense"></search>
+    </el-row>
 		<el-button type="primary" v-on:click="generateSong" :loading="isGenerating">Generate Song</el-button>
     <p>
 		  <div v-for="verse in verses">{{verse}}<br></div>
@@ -30,7 +33,7 @@
         isGenerating: false,
         rhymes: rhymeSchemes,
         scheme: '',
-        senses: {}
+        senses: []
       }
     },
     watch: {
