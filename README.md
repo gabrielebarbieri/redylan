@@ -35,3 +35,39 @@ npm test
 ```
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+
+## Deployment
+
+* Go to the project root
+
+* Erase the dist folder for a clean new build
+
+```bash
+rm -rf dist
+```
+
+* Build for production 
+
+```bash
+npm run build
+```
+
+* Go inside the dist fodler
+
+```bash
+cd dist
+```
+
+* Delete older sources from neocities
+
+```bash
+neocities delete static
+neocities delete *.worker.js
+```
+
+* upload the build
+
+```bash
+neocities push .
+```
