@@ -39,35 +39,20 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 
 ## Deployment
 
-* Go to the project root
-
-* Erase the dist folder for a clean new build
-
-```bash
+``` bash
+# Go to the project root and erase the dist folder for a clean new build
 rm -rf dist
-```
 
-* Build for production 
-
-```bash
+# Build for production 
 npm run build
-```
 
-* Go inside the dist fodler
-
-```bash
+# Go inside the dist fodler
 cd dist
-```
 
-* Delete older sources from neocities
-
-```bash
+# Delete older sources from neocities
 neocities delete static
 neocities delete *.worker.js
-```
 
-* upload the build
-
-```bash
+# Push the build
 neocities push .
 ```
