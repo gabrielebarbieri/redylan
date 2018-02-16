@@ -39,6 +39,8 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 
 ## Deployment
 
+Redylan is hosted on the wonderful service [Neocities](https://neocities.org/). To deploy it you need to install the [Neocities CLI](https://neocities.org/cli).
+
 ``` bash
 # Go to the project root and erase the dist folder for a clean new build
 rm -rf dist
