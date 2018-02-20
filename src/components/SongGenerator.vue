@@ -2,11 +2,11 @@
 	<div>
     <el-row>
       <!-- Generation Form -->
-      <el-col :span="8">
-        <h1>Generate a song in the style of Bob Dylan</h1>
+      <el-col :span="10">
+        <h2 class="tagline">Generate a song in the style of Bob Dylan</h2>
         <el-form label-width="120px" label-position="top">
-          <el-form-item label="Song structure">
-            <el-select v-model="scheme" placeholder="Song structure">
+          <el-form-item label="SONG STRUCTURE">
+            <el-select v-model="scheme" placeholder="Song structure" class="is-round">
               <el-option
                 v-for="rhyme in rhymes"
                 :key="rhyme.value"
@@ -23,14 +23,15 @@
             v-on:click="generateSong" 
             :loading="isGenerating"
             v-bind:disabled="selectedSenses==false"
-            >Generate Song</el-button>
+            round
+            >GENERATE SONG</el-button>
           </el-form-item>
         </el-form>
       </el-col>
       <!-- Song Card -->
-      <el-col :span="10">
+      <el-col :span="14">
         <el-row type="flex" justify="center">
-        <el-col :span="20">
+        <el-col :span="14">
           <el-card v-if="displaySong" :body-style="{ padding: '0px' }">
             <img v-bind:src="songImage" class="image">
             <div style="padding: 14px;">
@@ -82,7 +83,7 @@
         if (index > 0) {
           return ''
         }
-        return this.senses.length > 1 ? 'Song themes' : 'Song theme'
+        return this.senses.length > 1 ? 'SONG THEMES' : 'SONG THEME'
       },
       getSongImageUrl: function (senses) {
         if (senses.length > 0) {
@@ -137,6 +138,29 @@
 
 .form-search {
   width: 100%;
+}
+
+.el-form-item {
+  margin-bottom: 10px;
+}
+
+.el-form--label-top .el-form-item__label {
+  padding-left: 20px;
+  padding-bottom: 0px;
+}
+
+.el-form-item .el-button {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.el-card {
+  font-weight: 200;
+}
+
+.tagline {
+  /*text-align: center;*/
+  padding-left: 19px;
 }
 </style>
 

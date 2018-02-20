@@ -45,21 +45,16 @@ export default {
 
 <style>
 body, html {
-  /*font-family: 'Avenir', Helvetica, Arial, sans-serif;*/
   font-family: "Helvetica Neue",Helvetica, Arial,sans-serif;
-  /*font-family: 'Roboto Condensed', sans-serif;*/
-  /*font-family: 'Indie Flower', cursive;*/
+  font-weight: 700;
+  /*font-size: 12px;*/
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /*text-align: center;*/
-  /*color: #2c3e50;*/
-  /*margin-top: 60px;*/
+  
   margin: auto;
 }
 .el-header {
-    /*background-color: #303133;*/
     color: #F2F6FC;
-    /*text-align: center;*/
     line-height: 64px;
   }
 
@@ -69,19 +64,17 @@ body, html {
 
 .el-button {
   font-family: inherit;
+  font-weight: bold;
+  /*font-size: 12px;*/
 }
 
 input {
-  font-family: inherit;
+  font: inherit;
 }
 
-/*// Adobe CC Color scheme
+/*// Background color
 
-4D6973
-F4EFDE
-C0AE91 / 403A30
-BC7637
-8C4D22
+31396E -> 0D142A
 
 /// */
 
