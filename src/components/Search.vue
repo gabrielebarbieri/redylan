@@ -4,7 +4,7 @@
              v-bind:value="value"
              v-on:input="updateValue($event)"
              :fetch-suggestions="querySearch"
-             placeholder="Search a theme..."
+             placeholder="Pick a theme..."
              @select="handleSelect"
              :trigger-on-focus="false"
            ></el-autocomplete>
