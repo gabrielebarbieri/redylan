@@ -47,6 +47,8 @@ export default {
 body, html {
   /*font-family: 'Avenir', Helvetica, Arial, sans-serif;*/
   font-family: "Helvetica Neue",Helvetica, Arial,sans-serif;
+  /*font-family: 'Roboto Condensed', sans-serif;*/
+  /*font-family: 'Indie Flower', cursive;*/
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /*text-align: center;*/
@@ -64,6 +66,15 @@ body, html {
 .el-menu {
   border-bottom: none;
 }
+
+.el-button {
+  font-family: inherit;
+}
+
+input {
+  font-family: inherit;
+}
+
 /*// Adobe CC Color scheme
 
 4D6973
