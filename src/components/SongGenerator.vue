@@ -3,7 +3,7 @@
     <el-row>
       <!-- Generation Form -->
       <el-col :span="10">
-        <h2 class="tagline">Generate a song in the style of Bob Dylan</h2>
+        <h2 class="tagline">New lyrics in the style of Bob Dylan</h2>
         <el-form label-width="120px" label-position="top">
           <el-form-item label="SONG STRUCTURE">
             <el-select v-model="scheme" placeholder="Song structure" class="is-round">
@@ -24,7 +24,7 @@
             :loading="isGenerating"
             v-bind:disabled="selectedSenses==false"
             round
-            >GENERATE SONG</el-button>
+            >GENERATE LYRICS</el-button>
           </el-form-item>
         </el-form>
       </el-col>
