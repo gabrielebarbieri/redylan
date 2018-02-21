@@ -159,8 +159,7 @@
 }
 
 .tagline {
-  /*text-align: center;*/
-  padding-left: 19px;
+  padding-left: 20px;
 }
 </style>
 
