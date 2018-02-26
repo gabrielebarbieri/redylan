@@ -3,7 +3,6 @@
 > Remixing dylan lyrics with style using constrained markov process https://redylan.neocities.org
 
 # Todo
-* Fill How it works page
 * Add google analytics
 * Improve this README
 
