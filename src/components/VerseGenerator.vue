@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{sentence}}</h2>
+    <h3>{{sentence}}</h3>
     <el-row >
       <search v-model="sense"></search>
       <el-button type="primary" :loading="isLoading" v-on:click="fit" style="margin-left: 10px;">Fit</el-button>
@@ -21,7 +21,7 @@
     data () {
       return {
         sense: '',
-        sentence: 'Click on the fit button to train a super model',
+        sentence: 'Pick a theme and click on the fit button to see a constrained Markov process in action',
         isLoading: false,
         markovProcess: null,
         sequence: null
@@ -47,7 +47,7 @@
           // vm.sequence = perec.generate(markovProcess)
           // vm.sentence = perec.represent(vm.sequence)
           vm.markovProcess = markovProcess
-          vm.sentence = 'Click on generate to get a sentence'
+          vm.sentence = 'Click on generate to get sentences about ' + vm.sense
           vm.isLoading = false
         })
       },
