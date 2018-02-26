@@ -4,7 +4,8 @@
 
 # Todo
 * Fill How it works page
-* Improve ths README
+* Add google analytics
+* Improve this README
 
 ## Build Setup
 
