@@ -6,7 +6,7 @@
       <el-button type="primary" :loading="isLoading" v-on:click="fit" style="margin-left: 10px;">Fit</el-button>
       <el-button type="primary" v-bind:disabled="markovProcess===null" v-on:click="generate">Generate</el-button>
     </el-row>
-    <graph :graph="markovProcessGraph"></graph>
+    <graph v-if="markovProcess !== null" :graph="markovProcessGraph"></graph>
   </div>
 </template>
 
