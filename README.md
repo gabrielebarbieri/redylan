@@ -2,6 +2,9 @@
 
 > Remixing dylan lyrics with style using constrained markov process https://redylan.neocities.org
 
+
+![Redylan](https://raw.github.com/gabrielebarbieri/redylan/master/screenshot.png)
+
 Redylan is an implementation of the research I did during my Ph.D. thesis. It uses artificial intelligence techniques to model the style of Bob Dylan as a mathematical model. Such a model can generate new lyrics in the style of Bob Dylan, controlled by high-level parameters (lyrics' theme and rhyme scheme) chosen by the user.
 
 For more details about the algorithm, check this paper: [Markov Constraints for Generating Lyrics with Style](https://www.csl.sony.fr/downloads/papers/2012/barbieri-12a.pdf).
