@@ -24,7 +24,7 @@
 				<li>generates exactly the senteces that satisfy the control constraints</li>
 				<li>the admissible senteces are generated with the same probabilities as the original Markov chain.</li>
 			</ul>
-			A constrained Markov process allow precisely to do this. It uses <a href="https://en.wikipedia.org/wiki/Constraint_satisfaction_problem">constraint satisfaction techniques</a> to force a Markov chain to generate only admissible sentences without altering its probability distribution. For more details, you can read <a href="https://www.csl.sony.fr/downloads/papers/2012/barbieri-12a.pdf">this paper</a>.
+			A constrained Markov process allow precisely to do this. It uses <a href="https://en.wikipedia.org/wiki/Constraint_satisfaction_problem">constraint satisfaction techniques</a> to force a Markov chain to generate only admissible sentences without altering its probability distribution. For more details, you can read this paper: <a href="https://www.csl.sony.fr/downloads/papers/2012/barbieri-12a.pdf">Markov Constraints for Generating Lyrics with Style</a>.
 		</p>
 		<generator></generator>
 		
