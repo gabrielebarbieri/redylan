@@ -17,7 +17,7 @@
     "d3-interpolate": "^1.1.6",
     "element-ui": "^2.3.6",
     "hoek": "^5.0.3",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.13",
     "probability-distributions": "^0.9.1",
     "vue": "^2.5.16",
     "vue-router": "^2.7.0"
