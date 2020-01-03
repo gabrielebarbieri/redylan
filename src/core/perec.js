@@ -1,13 +1,25 @@
 var markov = require('./markovchain')
 var dylanMatrices = require('./dylan_matrices.json')
+var poetryMatrices = require('./poetry_matrices.json')
 var similarities = require('./word_similarities.json')
 var rhymes = require('./rhymes.json')
+var syllables = require('./syllables.json')
 var _ = require('lodash')
 
+// This suppose that the order is the same for either dylan and poetry corpus, is there a better way to do this?
 var ORDER = dylanMatrices.length - 1
 
 function generateSentence (markovProcess) {
   return markov.generate(markovProcess, ORDER)
+}
+
+function getMatrices (corpus) {
+  if (corpus === 'dylan') {
+    return dylanMatrices
+  }
+  if (corpus === 'poetry') {
+    return poetryMatrices
+  }
 }
 
 function represent (sentence) {
@@ -36,40 +48,45 @@ function getConstraints (words, index, length) {
   return cts
 }
 
-function getSemanticMarkovProcess (sense, length) {
+function getSemanticMarkovProcess (sense, length, corpus) {
   var words = similarities[sense]
+  corpus = corpus || 'dylan'
+  var matrices = getMatrices(corpus)
 
   var indices = _.shuffle(_.range(length))
   for (var i = 0; i < length; i++) {
     var index = indices[i]
     var cts = getConstraints(words, index, length)
     try {
-      return markov.getMarkovProcess(dylanMatrices, cts)
+      return markov.getMarkovProcess(matrices, cts)
     } catch (err) {
     }
   }
   return null
 }
 
-function getRhymingMarkovProcess (rhyme) {
+function getRhymingMarkovProcess (rhyme, corpus) {
   var words = rhymes[rhyme]
+  corpus = corpus || 'dylan'
+  var matrices = getMatrices(corpus)
 
   var lengths = _.range(8, 20)
   for (var i = 0; i < lengths.length; i++) {
     var length = lengths[i]
     var cts = getConstraints(words, length - 1, length)
     try {
-      return markov.getMarkovProcess(dylanMatrices, cts)
+      return markov.getMarkovProcess(matrices, cts)
     } catch (err) {
     }
   }
   return null
 }
 
-function generateSong (senses, rhymeScheme, handle) {
+function generateSong (senses, rhymeScheme, handle, corpus) {
   var length = 10
   var rhymes = {}
   var i = 0
+  corpus = corpus || 'dylan'
   var song = _.map(rhymeScheme, function (r) {
     var verse = ''
     if (r !== ' ') {
@@ -77,11 +94,11 @@ function generateSong (senses, rhymeScheme, handle) {
       if (rhyme === undefined) {
         var sense = senses[i % senses.length]
         i = i + 1
-        var sequence = generateSentence(getSemanticMarkovProcess(sense, length))
+        var sequence = generateSentence(getSemanticMarkovProcess(sense, length, corpus))
         rhymes[r] = getRhyme(sequence)
         verse = represent(sequence)
       } else {
-        verse = represent(generateSentence(getRhymingMarkovProcess(rhyme)))
+        verse = represent(generateSentence(getRhymingMarkovProcess(rhyme, corpus)))
       }
     }
     handle(verse)
@@ -178,4 +195,6 @@ var perec = {
 
 module.exports = perec
 
-// generateSong(['music', 'love'], 'ABAB CDCD EFEF', console.log)
+// generateSong(['music', 'love'], 'ABAB', console.log)
+// generateSong(['music', 'love'], 'ABAB', console.log, 'poetry')
+console.log(syllables['musicality'])
