@@ -4,6 +4,8 @@ var poetryMatrices = require('./poetry_matrices.json')
 var similarities = require('./word_similarities.json')
 var rhymes = require('./rhymes.json')
 var syllables = require('./syllables.json')
+var syllableSets = require('./syllable_sets.json')
+var rhythms = require('./rhythms.json')
 var _ = require('lodash')
 
 // This suppose that the order is the same for either dylan and poetry corpus, is there a better way to do this?
@@ -183,6 +185,41 @@ function getWords () {
   return _.map(_.keys(similarities), (word) => ({'value': word}))
 }
 
+// move to a dedicated file ?
+
+function getMetricMarkovProcess (rhythm, corpus) {
+  corpus = corpus || 'dylan'
+  var matrices = getMatrices(corpus)
+
+  var cts = [['<s>']]
+  for (var k = 0; k < rhythm.length; k++) {
+    cts.push(syllableSets[rhythm[k]])
+  }
+  cts.push(['</s>'])
+  return markov.getMarkovProcess(matrices, cts)
+}
+
+function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus) {
+  corpus = corpus || 'dylan'
+  var seedLength = syllables[seedWord]
+  var rhythmsToUse = _.shuffle(rhythms[seedLength][nOfSyllables])
+  for (var i = 0; i < rhythmsToUse.length; i++) {
+    var rhythm = rhythmsToUse[i]
+    var positions = _.filter(_.map(rhythm, function (r, index) { if (r === seedLength) return index + 1 }))
+    try {
+      var process = getMetricMarkovProcess(rhythm, corpus)
+      for (var j = 0; j < nOfVerses; j++) {
+        var verse = generateSentence(process)
+        var pos = _.sample(positions)
+        verse[pos] = seedWord
+        handle(represent(verse))
+      }
+      return
+    } catch (err) {
+    }
+  }
+}
+
 var perec = {
   getProcess: getSemanticMarkovProcess,
   generate: generateSentence,
@@ -190,11 +227,12 @@ var perec = {
   convertToGraph: convertToGraph,
   colorSentence: colorSentence,
   words: getWords,
-  generateSong: generateSong
+  generateSong: generateSong,
+  generateMetricVerses: generateMetricVerses
 }
 
 module.exports = perec
 
 // generateSong(['music', 'love'], 'ABAB', console.log)
 // generateSong(['music', 'love'], 'ABAB', console.log, 'poetry')
-console.log(syllables['musicality'])
+// generateMetricVerses('suburbs', 7, 5, console.log, 'poetry')
