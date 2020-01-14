@@ -9,7 +9,7 @@
             <el-select v-model="scheme" placeholder="Song structure" class="is-round">
               <el-option
                 v-for="rhyme in rhymes"
-                :key="rhyme.value"
+                :key="rhyme.label"
                 :label="rhyme.label + ' (' + rhyme.value + ')'"
                 :value="rhyme.value">
               </el-option>
@@ -19,8 +19,8 @@
             <search  class="form-search" v-model="s.sense"></search>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" 
-            v-on:click="generateSong" 
+            <el-button type="primary"
+            v-on:click="generateSong"
             :loading="isGenerating"
             v-bind:disabled="selectedSenses==false"
             round
@@ -36,7 +36,7 @@
             <img v-bind:src="songImage" class="image">
             <div style="padding: 14px;">
               <h3>{{title}}</h3>
-              <p><div v-for="verse in verses">{{verse}}<br></div></p>
+              <div v-for="(verse, i) in verses" :key="`${i}-${verse}`">{{verse}}<br></div>
             </div>
           </el-card>
         </el-col>

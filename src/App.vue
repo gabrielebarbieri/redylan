@@ -31,13 +31,9 @@ export default {
   },
   methods: {
     handleSelect (key, keyPath) {
-      console.log(this.activeIndex)
       this.activeIndex = key
-      console.log(this.activeIndex)
     },
     isActive (key) {
-      console.log(this.activeIndex)
-      console.log(key)
       return this.activeIndex === key
     }
   }
