@@ -71,10 +71,21 @@ function filterValues (matrix, values) {
     return matrix
   }
 
-  var filtered = _.mapValues(matrix, probabilities =>
-    _.pick(probabilities, values)
-  )
-  return _.omitBy(filtered, _.isEmpty)
+  var filtered = {}
+
+  for (let prefix in matrix) {
+    let probabilities = matrix[prefix]
+    var filteredProbabilities = {}
+    for (let suffix in probabilities) {
+      if (values.indexOf(suffix) > -1) {
+        filteredProbabilities[suffix] = probabilities[suffix]
+      }
+    }
+    if (!_.isEmpty(filteredProbabilities)) {
+      filtered[prefix] = filteredProbabilities
+    }
+  }
+  return filtered
 }
 
 function selectAlpha (suffix, prefix, alphas) {
