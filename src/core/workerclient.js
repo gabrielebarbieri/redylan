@@ -30,4 +30,20 @@ songWorker.generate = function (senses, rhymes, handleVerse, handleEnding) {
   songWorker.postMessage(['generateSong', senses, rhymes])
 }
 
-export {markovProcessWorker, songWorker}
+var metricWorker = new Worker()
+
+metricWorker.generate = function (seedWord, nOfSyllables, handleVerse, handleEnding) {
+  metricWorker.onmessage = event => {
+    if (event.data !== '</s>') {
+      handleVerse(event.data)
+    } else if (handleEnding !== undefined) {
+      handleEnding()
+    }
+  }
+  metricWorker.onerror = e => {
+    console.error(`Error: Line ${e.lineno} in ${e.filename}: ${e.message}`)
+  }
+  metricWorker.postMessage(['generateMetricVerses', seedWord, nOfSyllables])
+}
+
+export {markovProcessWorker, songWorker, metricWorker}
