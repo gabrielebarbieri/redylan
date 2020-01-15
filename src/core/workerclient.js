@@ -32,7 +32,7 @@ songWorker.generate = function (senses, rhymes, handleVerse, handleEnding) {
 
 var metricWorker = new Worker()
 
-metricWorker.generate = function (seedWord, nOfSyllables, handleVerse, handleEnding) {
+metricWorker.generate = function (seedWord, nOfSyllables, handleVerse, handleEnding, handleError, corpus) {
   metricWorker.onmessage = event => {
     if (event.data !== '</s>') {
       handleVerse(event.data)
@@ -41,9 +41,11 @@ metricWorker.generate = function (seedWord, nOfSyllables, handleVerse, handleEnd
     }
   }
   metricWorker.onerror = e => {
-    console.error(`Error: Line ${e.lineno} in ${e.filename}: ${e.message}`)
+    // Remove 'Uncaught' from the error message
+    handleError(e.message.substring(8))
+    handleEnding()
   }
-  metricWorker.postMessage(['generateMetricVerses', seedWord, nOfSyllables])
+  metricWorker.postMessage(['generateMetricVerses', seedWord, nOfSyllables, corpus])
 }
 
 export {markovProcessWorker, songWorker, metricWorker}

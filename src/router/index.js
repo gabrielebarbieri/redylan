@@ -9,7 +9,7 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/automatic-generator/',
       name: 'Generator',
       component: Generator
     },
@@ -19,7 +19,12 @@ export default new Router({
       component: HowItWorks
     },
     {
-      path: '/metrics/',
+      path: '/interactive-generator/',
+      name: 'Metrics',
+      component: Metrics
+    },
+    {
+      path: '/',
       name: 'Metrics',
       component: Metrics
     }

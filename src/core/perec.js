@@ -202,6 +202,9 @@ function getMetricMarkovProcess (rhythm, corpus) {
 function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus) {
   corpus = corpus || 'dylan'
   var seedLength = syllables[seedWord]
+  if (seedLength === undefined) {
+    throw new Error(`I don't know how many syllables there are in "${seedWord}"`)
+  }
   var rhythmsToUse = _.shuffle(rhythms[seedLength][nOfSyllables])
   for (var i = 0; i < rhythmsToUse.length; i++) {
     var rhythm = rhythmsToUse[i]
@@ -214,6 +217,7 @@ function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus
         verse[pos] = seedWord
         handle(represent(verse))
       }
+      handle('</s>')
       return
     } catch (err) {
     }
@@ -235,4 +239,4 @@ module.exports = perec
 
 // generateSong(['music', 'love'], 'ABAB', console.log)
 // generateSong(['music', 'love'], 'ABAB', console.log, 'poetry')
-// generateMetricVerses('suburbs', 7, 5, console.log, 'poetry')
+// generateMetricVerses('fsdgsgsg', 7, 5, console.log, 'poetry')

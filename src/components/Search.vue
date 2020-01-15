@@ -1,6 +1,6 @@
 <template>
-           <el-autocomplete 
-             class="inline-input" 
+           <el-autocomplete
+             class="inline-input"
              v-bind:value="value"
              v-on:input="updateValue($event)"
              :fetch-suggestions="querySearch"
