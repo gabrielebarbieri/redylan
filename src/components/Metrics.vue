@@ -6,8 +6,11 @@
         <div style="padding: 14px;">
           <el-row v-for="(g, index) in generators" :key="index" style="padding: 5px;" type="flex">
             <metrics-generator :visible.sync="g.visible" v-model="g.verse"></metrics-generator>
-              <el-col :span="2" class="edit-button-col"><el-button style="padding: 5px;" @click="g.visible=true" icon="el-icon-edit" size="mini"></el-button></el-col>
-              <el-col :span="12">{{g.verse}}</el-col>
+              <el-col :span="2" class="edit-button-col">
+                <el-button style="padding: 5px;" @click="g.visible=true" icon="el-icon-edit" size="mini"></el-button>
+                <el-button style="padding: 5px;" @click="deleteGenerator(index)" icon="el-icon-delete" size="mini"></el-button>
+              </el-col>
+              <el-col :span="12" style="font-weight: 200;">{{g.verse}}</el-col>
           </el-row>
         </div>
       </el-card>
@@ -22,6 +25,7 @@
 
 <style>
   .edit-button-col {
+    margin-right: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,6 +47,9 @@ export default {
   methods: {
     addGenerator: function () {
       this.generators.push({visible: true, verse: ''})
+    },
+    deleteGenerator: function (index) {
+      this.generators.splice(index, 1)
     }
   }
 }

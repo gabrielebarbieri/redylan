@@ -56,7 +56,7 @@ export default {
       verses: new Set(),
       isGenerating: false,
       nOfSyllables: 5,
-      seedWord: 'dance',
+      seedWord: '',
       value: '',
       corpus: 'poetry',
       corpusOptions: [{value: 'poetry', label: 'Old Poetry'}, {value: 'dylan', label: 'Bob Dylan'}]
@@ -87,8 +87,14 @@ export default {
   methods: {
     generate () {
       var vm = this
-      vm.isGenerating = true
-      metricWorker.generate(vm.seedWord, vm.nOfSyllables, vm.addVerse, vm.verseGenerated, vm.handleError, vm.corpus)
+
+      var seed = vm.seedWord.trim()
+      if (seed.split(' ').length > 1) {
+        this.$message.error(`You entered ${seed}. Please enter a single word at the time`)
+      } else {
+        vm.isGenerating = true
+        metricWorker.generate(seed, vm.nOfSyllables, vm.addVerse, vm.verseGenerated, vm.handleError, vm.corpus)
+      }
     },
     addVerse: function (verse) {
       if (!this.verses.has(verse.value)) {
@@ -108,11 +114,11 @@ export default {
     },
     handleClose: function (done) {
       if (this.value) {
-        done()
+        this.$emit('update:visible', false)
       } else {
         this.$confirm('You have not selected any verse. Are you sure to close this dialog?')
           .then(_ => {
-            done()
+            this.$emit('update:visible', false)
           })
           .catch(_ => {})
       }
@@ -126,8 +132,6 @@ export default {
         this.value = value
         this.$emit('input', value)
         this.$emit('update:visible', false)
-        // this.visible = false
-        this.done()
       }
     },
     getCorpusLabel: function (corpus) {

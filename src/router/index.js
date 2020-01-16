@@ -25,7 +25,7 @@ export default new Router({
     },
     {
       path: '/',
-      name: 'Metrics',
+      name: 'Home',
       component: Metrics
     }
   ]
