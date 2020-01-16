@@ -1,6 +1,6 @@
 <template>
   <svg width="960" height="200">
-    <g v-for="link in links">
+    <g v-for="link in links" :key="link">
       <path class="link" :d="getPath(link)" :id="'link' + link.id" v-bind:style="getLinkStyle(link)"></path>
       <text dy="3" class="label">
         <textPath startOffset="50%" :xlink:href="'#link' + link.id" v-bind:style="getLabelStyle(link)">

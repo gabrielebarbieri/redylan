@@ -215,9 +215,14 @@ function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus
         var verse = generateSentence(process)
         var pos = _.sample(positions)
         verse[pos] = seedWord
-        handle(represent(verse))
+        handle({
+          seed: seedWord,
+          syllables: nOfSyllables,
+          corpus: corpus,
+          value: represent(verse)
+        })
       }
-      handle('</s>')
+      handle({value: '</s>'})
       return
     } catch (err) {
     }
@@ -239,4 +244,4 @@ module.exports = perec
 
 // generateSong(['music', 'love'], 'ABAB', console.log)
 // generateSong(['music', 'love'], 'ABAB', console.log, 'poetry')
-// generateMetricVerses('fsdgsgsg', 7, 5, console.log, 'poetry')
+// generateMetricVerses('dance', 7, 5, v => console.log(v.value), 'poetry')
