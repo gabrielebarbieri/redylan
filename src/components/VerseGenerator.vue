@@ -31,7 +31,7 @@
       markovProcessGraph: function () {
         if (this.markovProcess !== null) {
           var g = perec.convertToGraph(this.markovProcess)
-          perec.colorSentence(g, this.sequence)
+          perec.colorSentence(g, this.sequence, this.markovProcess.order)
           return g
         }
       }

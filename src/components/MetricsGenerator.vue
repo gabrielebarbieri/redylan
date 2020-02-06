@@ -58,8 +58,8 @@ export default {
       nOfSyllables: 5,
       seedWord: '',
       value: '',
-      corpus: 'poetry',
-      corpusOptions: [{value: 'poetry', label: 'Old Poetry'}, {value: 'dylan', label: 'Bob Dylan'}]
+      corpus: 'french',
+      corpusOptions: [{value: 'french', label: 'Français'}, {value: 'poetry', label: 'Old Poetry'}, {value: 'dylan', label: 'Bob Dylan'}]
     }
   },
   props: ['visible'],

@@ -1,12 +1,8 @@
 var markov = require('./markovchain')
 var _ = require('lodash')
 
-// This suppose that the order is the same for either dylan and poetry corpus, is there a better way to do this?
-// var ORDER = dylanMatrices.length - 1
-var ORDER = 2
-
 function generateSentence (markovProcess) {
-  return markov.generate(markovProcess, ORDER)
+  return markov.generate(markovProcess)
 }
 
 function getMatrices (corpus) {
@@ -15,6 +11,9 @@ function getMatrices (corpus) {
   }
   if (corpus === 'poetry') {
     return require('./poetry_matrices.json')
+  }
+  if (corpus === 'french') {
+    return require('./french_matrices.json')
   }
 }
 
@@ -122,10 +121,12 @@ function locate (index, total) {
 function convertToGraph (markovProcess) {
   if (markovProcess === null) return
 
+  var process = markovProcess.process
+  var order = markovProcess.order
   var graph = {nodes: [{'label': '<s>', 'x': 0, 'y': 0.5}], links: []}
   var nodes = graph.nodes
-  for (var i = 1; i < markovProcess.length - 1; i++) {
-    var matrix = markovProcess[i]
+  for (var i = 1; i < process.length - 1; i++) {
+    var matrix = process[i]
     var targetToLink = {}
     var links = _.flatten(_.map(nodes, function (node) {
       var prefix = node.label
@@ -133,7 +134,7 @@ function convertToGraph (markovProcess) {
       node.links = {}
       return _.map(suffixes, function (suffix) {
         var transition = _.concat(_.split(prefix, ','), suffix)
-        var target = _.join(_.takeRight(transition, ORDER), ',')
+        var target = _.join(_.takeRight(transition, order), ',')
         var link = {'source': node, 'label': target, 'value': matrix[prefix][suffix], 'selected': false}
         node.links[target] = link
         targetToLink[target] === undefined ? targetToLink[target] = [link] : targetToLink[target].push(link)
@@ -143,7 +144,7 @@ function convertToGraph (markovProcess) {
 
     var targets = _.keys(targetToLink)
     nodes = _.map(targets, function (target, j) {
-      var node = {'label': target, 'x': locate(i, markovProcess.length), 'y': locate(j, targets.length)}
+      var node = {'label': target, 'x': locate(i, process.length), 'y': locate(j, targets.length)}
       _.map(targetToLink[target], function (link) { link.target = node })
       return node
     })
@@ -163,14 +164,14 @@ function convertToGraph (markovProcess) {
   return graph
 }
 
-function colorSentence (graph, sentence) {
+function colorSentence (graph, sentence, order) {
   if (graph === undefined || graph === null) return
   console.log(sentence)
   _.map(graph.links, function (link) { link.selected = false })
   if (sentence === undefined || sentence === null) return
   var node = graph.nodes[0]
   for (var i = 2; i < sentence.length; i++) {
-    var words = _.takeRight(_.take(sentence, i), ORDER)
+    var words = _.takeRight(_.take(sentence, i), order)
     var link = node.links[words]
     link.selected = true
     node = link.target
@@ -182,14 +183,21 @@ function getWords () {
   return _.map(_.keys(similarities), (word) => ({'value': word}))
 }
 
-// move to a dedicated file ?
+function getSyllableSets (corpus) {
+  var syllableSets
+  if (corpus === 'french') {
+    syllableSets = require('./syllable_sets_fr.json')
+  } else {
+    syllableSets = require('./syllable_sets_en.json')
+  }
+  return syllableSets
+}
 
 function getMetricMarkovProcess (rhythm, corpus) {
   corpus = corpus || 'dylan'
   var matrices = getMatrices(corpus)
-
   var cts = [['<s>']]
-  var syllableSets = require('./syllable_sets.json')
+  var syllableSets = getSyllableSets(corpus)
   for (var k = 0; k < rhythm.length; k++) {
     cts.push(syllableSets[rhythm[k]])
   }
@@ -198,7 +206,7 @@ function getMetricMarkovProcess (rhythm, corpus) {
 }
 
 function getSyllables (word) {
-  var syllables = require('./syllables.json')
+  var syllables = require('./syllables.json') // !!!
   var n = syllables[word]
   if (n === undefined) {
     throw new Error(`I don't know how many syllables there are in "${word}"`)
@@ -206,10 +214,20 @@ function getSyllables (word) {
   return n
 }
 
+function getRhythms (corpus) {
+  var rhythms
+  if (corpus === 'french') {
+    rhythms = require('./rhythms_fr.json')
+  } else {
+    rhythms = require('./rhythms_en.json')
+  }
+  return rhythms
+}
+
 function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus) {
   corpus = corpus || 'dylan'
   var seedLength = _.sumBy(seedWord.split(/\s+/), getSyllables)
-  var rhythms = require('./rhythms.json')
+  var rhythms = getRhythms(corpus)
   var rhythmsToUse = _.shuffle(rhythms[seedLength][nOfSyllables])
   for (var i = 0; i < rhythmsToUse.length; i++) {
     var rhythm = rhythmsToUse[i]

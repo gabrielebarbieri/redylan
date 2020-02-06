@@ -136,17 +136,19 @@ function getMarkovProcess (matrices, constraints) {
     alphas = computeAlphas(filtered)
     markovProcess.unshift(normalize(filtered, alphas))
   }
-  return markovProcess
+  return {process: markovProcess, order: maxOrder}
 }
 
 function sample (probabilities) {
   return PD.sample(_.keys(probabilities), 1, true, _.values(probabilities))[0]
 }
 
-function generate (markovProcess, order) {
+function generate (markovProcess) {
+  var process = markovProcess.process
+  var order = markovProcess.order
   var sequence = []
-  for (var index = 0; index < markovProcess.length; index++) {
-    var matrix = markovProcess[index]
+  for (var index = 0; index < process.length; index++) {
+    var matrix = process[index]
     var prefix = _.takeRight(sequence, _.min([index, order]))
     var probabilities = matrix[prefix]
     sequence.push(sample(probabilities))
