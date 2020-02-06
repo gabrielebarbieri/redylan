@@ -1,15 +1,9 @@
 var markov = require('./markovchain')
-var dylanMatrices = require('./dylan_matrices.json')
-var poetryMatrices = require('./poetry_matrices.json')
-var similarities = require('./word_similarities.json')
-var rhymes = require('./rhymes.json')
-var syllables = require('./syllables.json')
-var syllableSets = require('./syllable_sets.json')
-var rhythms = require('./rhythms.json')
 var _ = require('lodash')
 
 // This suppose that the order is the same for either dylan and poetry corpus, is there a better way to do this?
-var ORDER = dylanMatrices.length - 1
+// var ORDER = dylanMatrices.length - 1
+var ORDER = 2
 
 function generateSentence (markovProcess) {
   return markov.generate(markovProcess, ORDER)
@@ -17,10 +11,10 @@ function generateSentence (markovProcess) {
 
 function getMatrices (corpus) {
   if (corpus === 'dylan') {
-    return dylanMatrices
+    return require('./dylan_matrices.json')
   }
   if (corpus === 'poetry') {
-    return poetryMatrices
+    return require('./poetry_matrices.json')
   }
 }
 
@@ -51,6 +45,7 @@ function getConstraints (words, index, length) {
 }
 
 function getSemanticMarkovProcess (sense, length, corpus) {
+  var similarities = require('./word_similarities.json')
   var words = similarities[sense]
   corpus = corpus || 'dylan'
   var matrices = getMatrices(corpus)
@@ -68,6 +63,7 @@ function getSemanticMarkovProcess (sense, length, corpus) {
 }
 
 function getRhymingMarkovProcess (rhyme, corpus) {
+  var rhymes = require('./rhymes.json')
   var words = rhymes[rhyme]
   corpus = corpus || 'dylan'
   var matrices = getMatrices(corpus)
@@ -182,6 +178,7 @@ function colorSentence (graph, sentence) {
 }
 
 function getWords () {
+  var similarities = require('./word_similarities.json')
   return _.map(_.keys(similarities), (word) => ({'value': word}))
 }
 
@@ -192,6 +189,7 @@ function getMetricMarkovProcess (rhythm, corpus) {
   var matrices = getMatrices(corpus)
 
   var cts = [['<s>']]
+  var syllableSets = require('./syllable_sets.json')
   for (var k = 0; k < rhythm.length; k++) {
     cts.push(syllableSets[rhythm[k]])
   }
@@ -199,12 +197,19 @@ function getMetricMarkovProcess (rhythm, corpus) {
   return markov.getMarkovProcess(matrices, cts)
 }
 
+function getSyllables (word) {
+  var syllables = require('./syllables.json')
+  var n = syllables[word]
+  if (n === undefined) {
+    throw new Error(`I don't know how many syllables there are in "${word}"`)
+  }
+  return n
+}
+
 function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus) {
   corpus = corpus || 'dylan'
-  var seedLength = syllables[seedWord]
-  if (seedLength === undefined) {
-    throw new Error(`I don't know how many syllables there are in "${seedWord}"`)
-  }
+  var seedLength = _.sumBy(seedWord.split(/\s+/), getSyllables)
+  var rhythms = require('./rhythms.json')
   var rhythmsToUse = _.shuffle(rhythms[seedLength][nOfSyllables])
   for (var i = 0; i < rhythmsToUse.length; i++) {
     var rhythm = rhythmsToUse[i]
@@ -244,4 +249,4 @@ module.exports = perec
 
 // generateSong(['music', 'love'], 'ABAB', console.log)
 // generateSong(['music', 'love'], 'ABAB', console.log, 'poetry')
-// generateMetricVerses('dance', 7, 5, v => console.log(v.value), 'poetry')
+// generateMetricVerses('red sky', 7, 5, v => console.log(v.value), 'poetry')

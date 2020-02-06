@@ -44,8 +44,6 @@
         vm.sentence = 'Computing ... '
         vm.isLoading = true
         markovProcessWorker.generate(vm.sense).then(function (markovProcess) {
-          // vm.sequence = perec.generate(markovProcess)
-          // vm.sentence = perec.represent(vm.sequence)
           vm.markovProcess = markovProcess
           vm.sentence = 'Click on generate to get sentences about ' + vm.sense
           vm.isLoading = false

@@ -88,13 +88,9 @@ export default {
     generate () {
       var vm = this
 
-      var seed = vm.seedWord.trim()
-      if (seed.split(' ').length > 1) {
-        this.$message.error(`You entered ${seed}. Please enter a single word at the time`)
-      } else {
-        vm.isGenerating = true
-        metricWorker.generate(seed, vm.nOfSyllables, vm.addVerse, vm.verseGenerated, vm.handleError, vm.corpus)
-      }
+      var seed = vm.seedWord.trim().toLowerCase()
+      vm.isGenerating = true
+      metricWorker.generate(seed, vm.nOfSyllables, vm.addVerse, vm.verseGenerated, vm.handleError, vm.corpus)
     },
     addVerse: function (verse) {
       if (!this.verses.has(verse.value)) {
