@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  var perec = require('@/core/perec')
+  var perec = require('@/core/perec').default
   var _ = require('lodash')
   export default {
     props: ['value'],

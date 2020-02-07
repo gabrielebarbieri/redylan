@@ -20,7 +20,8 @@
     "lodash": "^4.17.13",
     "probability-distributions": "^0.9.1",
     "vue": "^2.5.16",
-    "vue-router": "^2.7.0"
+    "vue-router": "^2.7.0",
+    "wikijs": "^6.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.2.6",

@@ -1,5 +1,6 @@
 var markov = require('./markovchain')
 var _ = require('lodash')
+var wiki = require('wikijs').default
 
 function generateSentence (markovProcess) {
   return markov.generate(markovProcess)
@@ -205,13 +206,45 @@ function getMetricMarkovProcess (rhythm, corpus) {
   return markov.getMarkovProcess(matrices, cts)
 }
 
-function getSyllables (word) {
+function getSyllablesFromLocalJson (word) {
   var syllables = require('./syllables.json') // !!!
   var n = syllables[word]
   if (n === undefined) {
     throw new Error(`I don't know how many syllables there are in "${word}"`)
   }
   return n
+}
+
+function getEnglishSyllables (word) {
+  return new Promise((resolve, reject) => {
+    const words = word.split(/\s+/)
+    resolve(_.sumBy(words, getSyllablesFromLocalJson))
+  })
+}
+
+function parseWikitext (response) {
+  var wikitext = response.parse.wikitext['*']
+  const re = /\{\{pron\|(.*?)\|fr\}\}/
+  const found = wikitext.match(re)
+  return found[1].split('.').length
+}
+
+function getSyllablesFromWiki (word) {
+  return wiki({
+    apiUrl: 'https://fr.wiktionary.org/w/api.php'
+  }).api({
+    action: 'parse',
+    page: word,
+    prop: 'wikitext',
+    redirects: 'true',
+    format: 'json'
+  }).then(parseWikitext).catch(() => { throw new Error(`I don't know how many syllables there are in "${word}"`) })
+}
+
+function getFrenchSyllables (word) {
+  const words = word.split(/\s+/)
+  var promises = _.map(words, getSyllablesFromWiki)
+  return Promise.all(promises).then(_.sum)
 }
 
 function getRhythms (corpus) {
@@ -226,30 +259,41 @@ function getRhythms (corpus) {
 
 function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus) {
   corpus = corpus || 'dylan'
-  var seedLength = _.sumBy(seedWord.split(/\s+/), getSyllables)
-  var rhythms = getRhythms(corpus)
-  var rhythmsToUse = _.shuffle(rhythms[seedLength][nOfSyllables])
-  for (var i = 0; i < rhythmsToUse.length; i++) {
-    var rhythm = rhythmsToUse[i]
-    var positions = _.filter(_.map(rhythm, function (r, index) { if (r === seedLength) return index + 1 }))
-    try {
-      var process = getMetricMarkovProcess(rhythm, corpus)
-      for (var j = 0; j < nOfVerses; j++) {
-        var verse = generateSentence(process)
-        var pos = _.sample(positions)
-        verse[pos] = seedWord
-        handle({
-          seed: seedWord,
-          syllables: nOfSyllables,
-          corpus: corpus,
-          value: represent(verse)
-        })
-      }
-      handle({value: '</s>'})
-      return
-    } catch (err) {
-    }
+  // var seedLength = _.sumBy(seedWord.split(/\s+/), getSyllables)
+
+  var syllablesPromise
+  if (corpus === 'french') {
+    syllablesPromise = getFrenchSyllables(seedWord)
+    // syllablesPromise = getEnglishSyllables(seedWord)
+  } else {
+    syllablesPromise = getEnglishSyllables(seedWord)
   }
+
+  syllablesPromise.then(function (seedLength) {
+    var rhythms = getRhythms(corpus)
+    var rhythmsToUse = _.shuffle(rhythms[seedLength][nOfSyllables])
+    for (var i = 0; i < rhythmsToUse.length; i++) {
+      var rhythm = rhythmsToUse[i]
+      var positions = _.filter(_.map(rhythm, function (r, index) { if (r === seedLength) return index + 1 }))
+      try {
+        var process = getMetricMarkovProcess(rhythm, corpus)
+        for (var j = 0; j < nOfVerses; j++) {
+          var verse = generateSentence(process)
+          var pos = _.sample(positions)
+          verse[pos] = seedWord
+          handle({
+            seed: seedWord,
+            syllables: nOfSyllables,
+            corpus: corpus,
+            value: represent(verse)
+          })
+        }
+        handle({value: '</s>'})
+        return
+      } catch (err) {
+      }
+    }
+  }).catch(err => handle({err: err}))
 }
 
 var perec = {
@@ -263,8 +307,9 @@ var perec = {
   generateMetricVerses: generateMetricVerses
 }
 
-module.exports = perec
+export default perec
 
 // generateSong(['music', 'love'], 'ABAB', console.log)
 // generateSong(['music', 'love'], 'ABAB', console.log, 'poetry')
-// generateMetricVerses('red sky', 7, 5, v => console.log(v.value), 'poetry')
+// generateMetricVerses('red sky', 7, 5, v => console.log(v.error.message), 'french')
+

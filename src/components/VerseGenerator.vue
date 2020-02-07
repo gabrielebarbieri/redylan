@@ -13,7 +13,7 @@
 <script>
   import Graph from '@/components/Graph'
   import Search from '@/components/Search'
-  var perec = require('@/core/perec')
+  var perec = require('@/core/perec').default
   import {markovProcessWorker} from '@/core/workerclient'
 
   export default {

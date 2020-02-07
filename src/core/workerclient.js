@@ -34,7 +34,10 @@ var metricWorker = new Worker()
 
 metricWorker.generate = function (seedWord, nOfSyllables, handleVerse, handleEnding, handleError, corpus) {
   metricWorker.onmessage = event => {
-    if (event.data.value !== '</s>') {
+    if (event.data.err) {
+      handleError(event.data.err.message)
+      handleEnding()
+    } else if (event.data.value !== '</s>') {
       handleVerse(event.data)
     } else if (handleEnding !== undefined) {
       handleEnding()
