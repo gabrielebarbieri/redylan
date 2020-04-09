@@ -210,7 +210,7 @@ function getMetricMarkovProcess (rhythm, corpus) {
 }
 
 function getSyllablesFromLocalJson (word) {
-  var syllables = require('./syllables.json') // !!!
+  var syllables = require('./syllables.json')
   var n = syllables[word]
   if (n === undefined) {
     throw new Error(`I don't know how many syllables there are in "${word}"`)
@@ -260,14 +260,12 @@ function getRhythms (corpus) {
   return rhythms
 }
 
-function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus) {
+function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus, seedPostion) {
   corpus = corpus || 'dylan'
-  // var seedLength = _.sumBy(seedWord.split(/\s+/), getSyllables)
 
   var syllablesPromise
   if (corpus === 'french') {
     syllablesPromise = getFrenchSyllables(seedWord)
-    // syllablesPromise = getEnglishSyllables(seedWord)
   } else {
     syllablesPromise = getEnglishSyllables(seedWord)
   }
@@ -275,6 +273,11 @@ function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus
   syllablesPromise.then(function (seedLength) {
     var rhythms = getRhythms(corpus)
     var rhythmsToUse = _.shuffle(rhythms[seedLength][nOfSyllables])
+    if (seedPostion === 'start') {
+      rhythmsToUse = _.filter(rhythmsToUse, function (r) { return r[0] === seedLength })
+    } else if (seedPostion === 'end') {
+      rhythmsToUse = _.filter(rhythmsToUse, function (r) { return r[r.length - 1] === seedLength })
+    }
     for (var i = 0; i < rhythmsToUse.length; i++) {
       var rhythm = rhythmsToUse[i]
       var positions = _.filter(_.map(rhythm, function (r, index) { if (r === seedLength) return index + 1 }))
@@ -282,7 +285,14 @@ function generateMetricVerses (seedWord, nOfSyllables, nOfVerses, handle, corpus
         var process = getMetricMarkovProcess(rhythm, corpus)
         for (var j = 0; j < nOfVerses; j++) {
           var verse = generateSentence(process)
-          var pos = _.sample(positions)
+          var pos
+          if (seedPostion === 'start') {
+            pos = 1
+          } else if (seedPostion === 'end') {
+            pos = verse.length - 2
+          } else {
+            pos = _.sample(positions)
+          }
           verse[pos] = seedWord
           handle({
             seed: seedWord,
@@ -314,5 +324,5 @@ export default perec
 
 // generateSong(['music', 'love'], 'ABAB', console.log)
 // generateSong(['music', 'love'], 'ABAB', console.log, 'poetry')
-// generateMetricVerses('red sky', 7, 5, v => console.log(v.error.message), 'french')
+// generateMetricVerses('red sky', 7, 5, console.log, 'hyperion', 1)
 

@@ -18,6 +18,11 @@
               <el-option v-for="item in corpusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="Seed position">
+            <el-select placeholder="Start" v-model="seedPostion">
+              <el-option v-for="item in posOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
         <el-table :data="versesData" height="275" style="width: 100%" size="mini" v-loading="isGenerating">
           <el-table-column :label="tableTitle">
@@ -64,6 +69,12 @@ export default {
         {value: 'poetry', label: 'Old Poetry'},
         {value: 'dylan', label: 'Bob Dylan'},
         {value: 'hyperion', label: 'Hyperion'}
+      ],
+      seedPosition: undefined,
+      posOptions: [
+        {value: 'start', label: 'Start'},
+        {value: 'end', label: 'End'},
+        {value: undefined, label: 'Everywhere'}
       ]
     }
   },
@@ -95,7 +106,7 @@ export default {
 
       var seed = vm.seedWord.trim().toLowerCase()
       vm.isGenerating = true
-      metricWorker.generate(seed, vm.nOfSyllables, vm.addVerse, vm.verseGenerated, vm.handleError, vm.corpus)
+      metricWorker.generate(seed, vm.nOfSyllables, vm.addVerse, vm.verseGenerated, vm.handleError, vm.corpus, vm.seedPosition)
     },
     addVerse: function (verse) {
       if (!this.verses.has(verse.value)) {

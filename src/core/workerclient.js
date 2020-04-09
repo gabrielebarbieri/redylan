@@ -32,7 +32,7 @@ songWorker.generate = function (senses, rhymes, handleVerse, handleEnding) {
 
 var metricWorker = new Worker()
 
-metricWorker.generate = function (seedWord, nOfSyllables, handleVerse, handleEnding, handleError, corpus) {
+metricWorker.generate = function (seedWord, nOfSyllables, handleVerse, handleEnding, handleError, corpus, seedPostion) {
   metricWorker.onmessage = event => {
     if (event.data.err) {
       handleError(event.data.err.message)
@@ -48,7 +48,7 @@ metricWorker.generate = function (seedWord, nOfSyllables, handleVerse, handleEnd
     handleError(e.message.substring(8))
     handleEnding()
   }
-  metricWorker.postMessage(['generateMetricVerses', seedWord, nOfSyllables, corpus])
+  metricWorker.postMessage(['generateMetricVerses', seedWord, nOfSyllables, corpus, seedPostion])
 }
 
 export {markovProcessWorker, songWorker, metricWorker}
