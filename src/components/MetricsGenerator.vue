@@ -19,7 +19,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="Seed position">
-            <el-select placeholder="Start" v-model="seedPostion">
+            <el-select placeholder="Start" v-model="seedPosition">
               <el-option v-for="item in posOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
@@ -147,11 +147,11 @@ export default {
       }
     },
     getCorpusLabel: function (corpus) {
-      if (corpus === 'dylan') {
-        return 'Bob Dylan'
-      }
-      if (corpus === 'poetry') {
-        return 'Old Poetry'
+      for (let i = 0; i < this.corpusOptions.length; i++) {
+        const option = this.corpusOptions[i]
+        if (corpus === option.value) {
+          return option.label
+        }
       }
     }
   }
