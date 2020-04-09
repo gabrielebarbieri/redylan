@@ -16,6 +16,9 @@ function getMatrices (corpus) {
   if (corpus === 'french') {
     return require('./french_matrices.json')
   }
+  if (corpus === 'hyperion') {
+    return require('./hyperion_matrices.json')
+  }
 }
 
 function represent (sentence) {

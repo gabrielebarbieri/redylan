@@ -59,7 +59,12 @@ export default {
       seedWord: '',
       value: '',
       corpus: 'french',
-      corpusOptions: [{value: 'french', label: 'Français'}, {value: 'poetry', label: 'Old Poetry'}, {value: 'dylan', label: 'Bob Dylan'}]
+      corpusOptions: [
+        {value: 'french', label: 'Français'},
+        {value: 'poetry', label: 'Old Poetry'},
+        {value: 'dylan', label: 'Bob Dylan'},
+        {value: 'hyperion', label: 'Hyperion'}
+      ]
     }
   },
   props: ['visible'],
